@@ -1,4 +1,4 @@
-/* Reading stages: balanced type size and spacing. Quizzes and other pages are unchanged. */
+/* Reading sizes kept at the approved compact setting. */
 body[data-page="event"] .lesson>summary{font-size:18px;padding:24px 28px;line-height:1.55}
 body[data-page="event"] .lesson-body{max-width:1050px;padding:0 30px 32px}
 body[data-page="event"] .study-cards{gap:20px}
@@ -19,3 +19,20 @@ body[data-page="event"] .challenge p{font-size:15px;line-height:1.8;margin:12px 
 body[data-page="event"] .challenge summary{font-size:13px;padding:12px 0}
 body[data-page="event"] .mark{font-size:13px;line-height:1.75;padding:10px 0;gap:12px}
 @media(max-width:700px){body[data-page="event"] .lesson>summary{font-size:16px;padding:20px 17px}body[data-page="event"] .lesson-body{padding:0 16px 26px}body[data-page="event"] .study-cards{gap:18px}body[data-page="event"] .study-block{padding:21px 17px;gap:10px}body[data-page="event"] .study-block .block-number{display:none}body[data-page="event"] .study-block h3{font-size:16px;line-height:1.5;margin-bottom:12px}body[data-page="event"] .topic-reading-check{font-size:15px;line-height:1.8;gap:11px;grid-template-columns:20px minmax(0,1fr)}body[data-page="event"] .topic-reading-box{width:20px;height:20px;min-width:20px;margin-top:4px}body[data-page="event"] .topic-reading-sentence{margin-bottom:11px}body[data-page="event"] .challenge{padding:21px}body[data-page="event"] .study-tip{padding:19px}}
+/* Square stage cards; an opened stage expands to full reading width. */
+body[data-page="event"] #tab-panel:has(>.lesson){display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;align-items:start}
+body[data-page="event"] #tab-panel:has(>.lesson)>.section-head,body[data-page="event"] #tab-panel:has(>.lesson)>.progress{grid-column:1/-1}
+body[data-page="event"] #tab-panel>.lesson{margin:0;min-width:0;border-radius:18px;background:#fff;overflow:hidden;border:1px solid #dce6d3;box-shadow:0 6px 22px #233d3506}
+body[data-page="event"] #tab-panel>.lesson:nth-of-type(3n+1){background:#f0f5e7}
+body[data-page="event"] #tab-panel>.lesson:nth-of-type(3n+2){background:#f2f5f8}
+body[data-page="event"] #tab-panel>.lesson:nth-of-type(3n){background:#f5f1fa}
+body[data-page="event"] #tab-panel>.lesson:not([open])>summary{aspect-ratio:1/1;min-height:0;width:100%;padding:24px;display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-start;gap:13px;font-size:17px;line-height:1.45;font-weight:600;box-sizing:border-box;list-style:none;cursor:pointer}
+body[data-page="event"] #tab-panel>.lesson>summary::-webkit-details-marker{display:none}
+body[data-page="event"] #tab-panel>.lesson:not([open])>summary .code{font-size:11px;line-height:1.3;padding:7px 9px;background:#e0eacc;border-radius:8px}
+body[data-page="event"] #tab-panel>.lesson:not([open])>summary::after{content:'Abrir etapa →';font-size:11px;font-weight:500;color:#607956;margin-top:auto;line-height:1.4}
+body[data-page="event"] #tab-panel>.lesson:not([open]):hover{border-color:#9fb88a;box-shadow:0 8px 25px #233d3510}
+body[data-page="event"] #tab-panel>.lesson[open]{grid-column:1/-1;background:#fff}
+body[data-page="event"] #tab-panel>.lesson[open]>summary{display:flex;flex-direction:row;align-items:center;gap:16px;padding:24px 28px;aspect-ratio:auto;font-size:18px;line-height:1.55}
+@media(max-width:1100px){body[data-page="event"] #tab-panel:has(>.lesson){grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:700px){body[data-page="event"] #tab-panel:has(>.lesson){grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}body[data-page="event"] #tab-panel>.lesson:not([open])>summary{padding:15px;gap:9px;font-size:14px;line-height:1.4}body[data-page="event"] #tab-panel>.lesson:not([open])>summary .code{padding:5px 7px;font-size:10px}body[data-page="event"] #tab-panel>.lesson:not([open])>summary::after{font-size:10px}body[data-page="event"] #tab-panel>.lesson[open]>summary{font-size:16px;padding:20px 17px}}
+@media print{body[data-page="event"] #tab-panel:has(>.lesson){display:block}body[data-page="event"] #tab-panel>.lesson:not([open])>summary{aspect-ratio:auto}body[data-page="event"] #tab-panel>.lesson:not([open])>summary::after{display:none}}
