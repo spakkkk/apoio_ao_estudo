@@ -1,9 +1,32 @@
+# Dependencias e ficheiros temporarios
+node_modules/
+.firebase/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Configuracao local e segredos
+.env
+.env.*
+!.env.example
+.runtimeconfig.json
+application_default_credentials.json
+*-firebase-adminsdk-*.json
+*service-account*.json
+*serviceAccount*.json
+*.pem
+*.key
+*.p12
+*.pfx
+
+# Sistema operativo
 .DS_Store
 Thumbs.db
-.vscode/
+Desktop.ini
 
-# Documentação fora da publicação
-README
-README.*
-readme
-readme.*
+# Documentacao excluida por preferencia do projeto
+[Rr][Ee][Aa][Dd][Mm][Ee]*
+
+# Manter no Git: public/, .firebaserc, firebase.json,
+# firestore.rules, firestore.indexes.json e configuracao Web do Firebase.
