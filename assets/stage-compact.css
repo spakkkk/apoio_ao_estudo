@@ -1,0 +1,10 @@
+/* Compact stage tiles only. Existing reading content and checkboxes are unchanged. */
+body[data-page="event"] #tab-panel:has(>.lesson){grid-template-columns:repeat(3,minmax(0,150px));gap:12px;justify-content:start;align-items:start}
+body[data-page="event"] #tab-panel>.lesson:not([open]){width:100%;max-width:150px;border-radius:12px}
+body[data-page="event"] #tab-panel>.lesson:not([open])>summary{width:100%;aspect-ratio:1/1;min-height:0;height:auto;padding:12px;gap:7px;font-size:12px;line-height:1.35;font-weight:600;box-sizing:border-box;display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-start}
+body[data-page="event"] #tab-panel>.lesson:not([open])>summary .code{font-size:9px;padding:4px 6px;line-height:1.2;border-radius:5px}
+body[data-page="event"] #tab-panel>.lesson:not([open])>summary::after{content:'Abrir →';font-size:9px;line-height:1.3;margin-top:auto;font-weight:400}
+/* An open stage keeps the full available reading width. */
+body[data-page="event"] #tab-panel:has(>.lesson[open]){grid-template-columns:repeat(3,minmax(0,1fr))}
+body[data-page="event"] #tab-panel>.lesson[open]{max-width:none;width:100%;grid-column:1/-1}
+@media(max-width:700px){body[data-page="event"] #tab-panel:has(>.lesson){grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;max-width:474px}body[data-page="event"] #tab-panel:has(>.lesson[open]){max-width:none}body[data-page="event"] #tab-panel>.lesson:not([open])>summary{padding:9px;gap:5px;font-size:11px;line-height:1.28}body[data-page="event"] #tab-panel>.lesson:not([open])>summary .code{font-size:8px;padding:3px 5px}body[data-page="event"] #tab-panel>.lesson:not([open])>summary::after{font-size:8px}}
