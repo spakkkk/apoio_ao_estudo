@@ -1,21 +1,21 @@
-/* Only the reading stages change; quizzes, navigation and results stay as they are. */
-body[data-page="event"] .lesson>summary{font-size:21px;padding:30px 32px;line-height:1.65}
-body[data-page="event"] .lesson-body{max-width:1050px;padding:0 36px 40px}
-body[data-page="event"] .study-cards{gap:30px}
-body[data-page="event"] .study-block{padding:30px 32px;gap:22px}
-body[data-page="event"] .study-block h3{font-size:19px;line-height:1.7;margin:0 0 23px}
-body[data-page="event"] .study-block p{font-size:18px;line-height:2.05;max-width:65ch}
+/* Reading stages: balanced type size and spacing. Quizzes and other pages are unchanged. */
+body[data-page="event"] .lesson>summary{font-size:18px;padding:24px 28px;line-height:1.55}
+body[data-page="event"] .lesson-body{max-width:1050px;padding:0 30px 32px}
+body[data-page="event"] .study-cards{gap:20px}
+body[data-page="event"] .study-block{padding:22px 25px;gap:18px}
+body[data-page="event"] .study-block h3{font-size:16px;line-height:1.5;margin:0 0 13px}
+body[data-page="event"] .study-block p{font-size:15px;line-height:1.8;max-width:65ch}
 body[data-page="event"] .study-block>div{min-width:0;flex:1}
-body[data-page="event"] .topic-reading-check{display:grid;grid-template-columns:25px minmax(0,1fr);gap:18px;align-items:start;cursor:pointer;width:100%;font-size:18px;line-height:2.05}
-body[data-page="event"] .topic-reading-box{appearance:auto;-webkit-appearance:checkbox;accent-color:#527245;width:25px;height:25px;min-width:25px;margin:7px 0 0;cursor:pointer;flex-shrink:0}
+body[data-page="event"] .topic-reading-check{display:grid;grid-template-columns:20px minmax(0,1fr);gap:13px;align-items:start;cursor:pointer;width:100%;font-size:15px;line-height:1.8}
+body[data-page="event"] .topic-reading-box{appearance:auto;-webkit-appearance:checkbox;accent-color:#527245;width:20px;height:20px;min-width:20px;margin:4px 0 0;cursor:pointer;flex-shrink:0}
 body[data-page="event"] .topic-reading-copy{display:block;min-width:0;overflow-wrap:break-word}
-body[data-page="event"] .topic-reading-sentence{display:block;margin-bottom:18px}
+body[data-page="event"] .topic-reading-sentence{display:block;margin-bottom:10px}
 body[data-page="event"] .topic-reading-sentence:last-of-type{margin-bottom:0}
-body[data-page="event"] .topic-reading-hint{display:inline-block;font-size:12px;line-height:1.6;letter-spacing:.2px;color:#72806b;margin-top:18px;padding:5px 10px;background:#edf2e7;border-radius:7px}
+body[data-page="event"] .topic-reading-hint{display:inline-block;font-size:10px;line-height:1.5;letter-spacing:.1px;color:#72806b;margin-top:10px;padding:3px 7px;background:#edf2e7;border-radius:6px}
 body[data-page="event"] .is-understood .topic-reading-hint{color:#36572a;background:#deedce}
-body[data-page="event"] .study-tip{font-size:16px;line-height:2;padding:26px;margin:35px 0}
-body[data-page="event"] .challenge{padding:32px;margin-top:32px}
-body[data-page="event"] .challenge p{font-size:18px;line-height:2;margin:16px 0 24px}
-body[data-page="event"] .challenge summary{font-size:15px;padding:16px 0}
-body[data-page="event"] .mark{font-size:15px;line-height:1.9;padding:15px 0;gap:14px}
-@media(max-width:700px){body[data-page="event"] .lesson>summary{font-size:18px;padding:24px 18px}body[data-page="event"] .lesson-body{padding:0 16px 32px}body[data-page="event"] .study-cards{gap:24px}body[data-page="event"] .study-block{padding:26px 18px;gap:10px}body[data-page="event"] .study-block .block-number{display:none}body[data-page="event"] .study-block h3{font-size:19px;line-height:1.7;margin-bottom:20px}body[data-page="event"] .topic-reading-check{font-size:18px;line-height:2;gap:13px;grid-template-columns:24px minmax(0,1fr)}body[data-page="event"] .topic-reading-box{width:24px;height:24px;min-width:24px;margin-top:6px}body[data-page="event"] .topic-reading-sentence{margin-bottom:20px}body[data-page="event"] .challenge{padding:25px}body[data-page="event"] .study-tip{padding:23px}}
+body[data-page="event"] .study-tip{font-size:14px;line-height:1.8;padding:20px;margin:25px 0}
+body[data-page="event"] .challenge{padding:24px;margin-top:24px}
+body[data-page="event"] .challenge p{font-size:15px;line-height:1.8;margin:12px 0 18px}
+body[data-page="event"] .challenge summary{font-size:13px;padding:12px 0}
+body[data-page="event"] .mark{font-size:13px;line-height:1.75;padding:10px 0;gap:12px}
+@media(max-width:700px){body[data-page="event"] .lesson>summary{font-size:16px;padding:20px 17px}body[data-page="event"] .lesson-body{padding:0 16px 26px}body[data-page="event"] .study-cards{gap:18px}body[data-page="event"] .study-block{padding:21px 17px;gap:10px}body[data-page="event"] .study-block .block-number{display:none}body[data-page="event"] .study-block h3{font-size:16px;line-height:1.5;margin-bottom:12px}body[data-page="event"] .topic-reading-check{font-size:15px;line-height:1.8;gap:11px;grid-template-columns:20px minmax(0,1fr)}body[data-page="event"] .topic-reading-box{width:20px;height:20px;min-width:20px;margin-top:4px}body[data-page="event"] .topic-reading-sentence{margin-bottom:11px}body[data-page="event"] .challenge{padding:21px}body[data-page="event"] .study-tip{padding:19px}}
