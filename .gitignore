@@ -1,0 +1,9 @@
+.DS_Store
+Thumbs.db
+.vscode/
+
+# Documentação fora da publicação
+README
+README.*
+readme
+readme.*

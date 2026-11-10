@@ -1,0 +1,36 @@
+/* Presentation overlay: the home page and quizzes retain their existing styles. */
+body[data-page="event"] .page-intro{max-width:850px;margin-bottom:32px}
+body[data-page="event"] .page-intro h1{line-height:1.18;margin:20px 0}
+body[data-page="event"] .page-intro p{font-size:15px;line-height:1.9;max-width:700px}
+body[data-page="event"] .study-welcome{background:#eaf3df;border-color:#d5e4c3;color:#385234;padding:22px 26px;font-size:14px;line-height:1.9;margin:32px 0}
+body[data-page="event"] .tabbar{gap:12px;margin:34px 0}
+body[data-page="event"] .tabbar button{padding:14px 18px}
+body[data-page="event"] .lesson{margin:22px 0;border-radius:18px;box-shadow:0 6px 28px #263c2d04}
+body[data-page="event"] .lesson>summary{padding:26px 28px;font-size:18px;line-height:1.6;gap:18px}
+body[data-page="event"] .lesson>summary .code{font-size:12px;padding:8px 10px;flex-shrink:0}
+body[data-page="event"] .lesson[open]>summary{border-bottom:1px solid #edf1e6;margin-bottom:28px}
+body[data-page="event"] .lesson-body{padding:0 32px 34px;max-width:920px;margin:auto}
+body[data-page="event"] .lesson-body>.eyebrow{display:block;margin:12px 0 26px;font-size:11px}
+body[data-page="event"] .study-cards{display:grid;gap:20px}
+body[data-page="event"] .study-block{display:flex;gap:18px;padding:25px 27px;background:#f7f9f3;border:1px solid #eaf0e2;border-radius:14px;align-items:flex-start}
+body[data-page="event"] .study-block:nth-child(even){background:#fff}
+body[data-page="event"] .block-number{flex-shrink:0;display:grid;place-items:center;width:32px;height:32px;background:#e4eed8;color:#4b6838;border-radius:10px;font-size:11px;letter-spacing:1px;margin-top:2px}
+body[data-page="event"] .study-block h3{font-size:16px;margin:0 0 12px;line-height:1.5;font-weight:650}
+body[data-page="event"] .study-block p{font-size:15px;line-height:1.95;margin:0;color:#425347;max-width:66ch}
+body[data-page="event"] .study-tip{padding:22px 25px;margin:30px 0 24px;border-left:4px solid #98b978;background:#f0f5e7;color:#426033;font-size:14px;line-height:1.9;border-radius:0 12px 12px 0}
+body[data-page="event"] .challenge{margin:24px 0 30px;padding:28px;background:#e7f0da;border-radius:15px;font-size:15px;line-height:1.9}
+body[data-page="event"] .challenge-label{font-size:11px;letter-spacing:1.7px;text-transform:uppercase;color:#52713e;display:block;margin-bottom:10px;font-weight:700}
+body[data-page="event"] .challenge p{font-size:15px;line-height:1.9;margin:8px 0 18px}
+body[data-page="event"] .challenge summary{font-size:13px;padding:13px 0}
+body[data-page="event"] .mark{font-size:13px;line-height:1.8;gap:12px;padding:8px 0}
+body[data-page="event"] .formula-grid{gap:22px}
+body[data-page="event"] .formula{padding:27px;font-size:15px;border-radius:15px}
+body[data-page="event"] .formula code{margin-top:16px;line-height:2;font-size:15px;overflow-wrap:anywhere}
+body[data-page="event"] .exam-light{max-width:900px;background:white;border:1px solid var(--line);border-radius:18px;padding:34px}
+body[data-page="event"] .exam-light h2{font-size:26px;line-height:1.5;margin-bottom:28px}
+body[data-page="event"] .exam-light .study-block{display:block;margin-top:22px}
+body[data-page="event"] .exam-facts{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:30px 0}
+body[data-page="event"] .exam-facts>div{padding:22px;background:#edf4e5;border-radius:13px}
+body[data-page="event"] .exam-facts strong{display:block;font-size:24px;font-weight:600}
+body[data-page="event"] .exam-facts span{display:block;margin-top:9px;font-size:12px;color:var(--muted)}
+@media(max-width:700px){body[data-page="event"] .lesson>summary{padding:22px 18px;font-size:16px;gap:12px}body[data-page="event"] .lesson-body{padding:0 18px 28px}body[data-page="event"] .study-block{padding:22px 18px;gap:12px}body[data-page="event"] .block-number{width:25px;height:25px;font-size:9px;border-radius:7px}body[data-page="event"] .study-block p{font-size:15px;line-height:1.9}body[data-page="event"] .challenge{padding:22px}body[data-page="event"] .exam-light{padding:22px}body[data-page="event"] .exam-facts{grid-template-columns:1fr}body[data-page="event"] .study-welcome{padding:20px}body[data-page="event"] .tabbar button{font-size:11px;padding:12px}body[data-page="event"] .formula{padding:23px}}
