@@ -1,3 +1,4 @@
+import {enhanceDashboard} from "./dashboard.js";
 import {createAccountBar,enhancePortal} from "./portal-ui.js";
 import {initializeApp,getApps,getApp} from "https://www.gstatic.com/firebasejs/13.3.0/firebase-app.js";
 import {getAuth,onAuthStateChanged,signOut} from "https://www.gstatic.com/firebasejs/13.3.0/firebase-auth.js";
@@ -36,5 +37,5 @@ export async function start(){
  window.addEventListener("storage",e=>{if(e.key===key){conflict=true;message("Outra janela alterou o estudo. Exporta e recarrega antes de continuar.");}});
  onAuthStateChanged(auth,u=>{if(!u||u.uid!==user.uid)location.replace(new URL("login.html",root));});
  document.addEventListener("click",e=>{const a=e.target.closest("a[href]");if(!a||e.defaultPrevented||e.ctrlKey||e.metaKey||e.shiftKey||e.altKey||a.target==="_blank"||a.hasAttribute("download"))return;const dest=new URL(a.href,location.href);if(dest.origin!==location.origin||dest.pathname===location.pathname)return;if(pending||running){e.preventDefault();flush().then(()=>location.assign(dest.href)).catch(err=>alert(err.message));}},true);
- const api={key,queue,flush};window.IanCloud=api;enhancePortal(api,bar);return api;
+ const api={key,queue,flush};window.IanCloud=api;enhancePortal(api,bar);enhanceDashboard(api);return api;
 }
