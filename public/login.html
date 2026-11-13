@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="pt-PT">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Entrar | Apoio ao Estudo</title>
+
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      font-family: system-ui, sans-serif;
+      color: #182337;
+      background: #f2f5fa;
+    }
+
+    main {
+      width: 100%;
+      max-width: 420px;
+      padding: 32px;
+      border-radius: 20px;
+      background: white;
+      box-shadow: 0 12px 40px #18233712;
+    }
+
+    h1 { margin-top: 0; }
+    p { line-height: 1.5; }
+
+    label {
+      display: block;
+      margin-top: 18px;
+    }
+
+    input, button {
+      width: 100%;
+      padding: 13px;
+      margin-top: 8px;
+      border-radius: 10px;
+      font: inherit;
+    }
+
+    input { border: 1px solid #cbd5e1; }
+
+    button {
+      margin-top: 24px;
+      border: 0;
+      background: #2459d3;
+      color: white;
+      cursor: pointer;
+    }
+
+    button:disabled {
+      opacity: .65;
+      cursor: wait;
+    }
+
+    #mensagem { min-height: 24px; }
+  </style>
+</head>
+
+<body>
+  <main>
+    <h1>Olá, Ian</h1>
+    <p>Entra na tua conta de estudo.</p>
+
+    <form id="login">
+      <label for="email">E-mail</label>
+      <input
+        id="email"
+        type="email"
+        autocomplete="username"
+        required
+      >
+
+      <label for="password">Palavra-passe</label>
+      <input
+        id="password"
+        type="password"
+        autocomplete="current-password"
+        required
+      >
+
+      <button id="entrar" type="submit">Entrar</button>
+    </form>
+
+    <p id="mensagem" role="status" aria-live="polite"></p>
+  </main>
+
+  <script type="module">
+    import { initializeApp } from
+      "https://www.gstatic.com/firebasejs/13.3.0/firebase-app.js";
+
+    import {
+      getAuth,
+      signInWithEmailAndPassword,
+      onAuthStateChanged
+    } from
+      "https://www.gstatic.com/firebasejs/13.3.0/firebase-auth.js";
+
+    const firebaseConfig = {
+	  apiKey: "AIzaSyC7qmpQmNAA1Y5WDmtKvamS1k4k7qcELNI",
+	  authDomain: "apoio-ao-estudo.firebaseapp.com",
+	  projectId: "apoio-ao-estudo",
+	  storageBucket: "apoio-ao-estudo.firebasestorage.app",
+	  messagingSenderId: "740789054680",
+	  appId: "1:740789054680:web:c068304d0b8bbcf96a3bad"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    const form = document.getElementById("login");
+    const botao = document.getElementById("entrar");
+    const mensagem = document.getElementById("mensagem");
+
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        window.location.replace("./index.html");
+      }
+    });
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      botao.disabled = true;
+      mensagem.textContent = "A entrar…";
+
+      try {
+        await signInWithEmailAndPassword(
+          auth,
+          document.getElementById("email").value.trim(),
+          document.getElementById("password").value
+        );
+      } catch (error) {
+        mensagem.textContent =
+          error.code === "auth/network-request-failed"
+            ? "Não foi possível ligar. Verifica a ligação à Internet."
+            : "Não foi possível entrar. Verifica o e-mail e a palavra-passe.";
+
+        botao.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>
