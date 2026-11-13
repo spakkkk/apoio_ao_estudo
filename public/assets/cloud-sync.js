@@ -1,3 +1,4 @@
+import {createAccountBar,enhancePortal} from "./portal-ui.js";
 import {initializeApp,getApps,getApp} from "https://www.gstatic.com/firebasejs/13.3.0/firebase-app.js";
 import {getAuth,onAuthStateChanged,signOut} from "https://www.gstatic.com/firebasejs/13.3.0/firebase-auth.js";
 import {getFirestore,doc,getDocFromServer,runTransaction,serverTimestamp} from "https://www.gstatic.com/firebasejs/13.3.0/firebase-firestore.js";
@@ -11,14 +12,11 @@ export async function start(){
  if(!user){location.replace(new URL("login.html",root));await new Promise(()=>{});}
  const key="ian-study-portal-v1:"+user.uid,pendingKey=key+":pending",reference=doc(db,"users",user.uid,"progresso","portal");
  let revision=0,pending=null,running=null,timeout,conflict=false;
- const bar=document.createElement("div");bar.style.cssText="display:flex;gap:12px;align-items:center;flex-wrap:wrap;padding:10px 20px;background:#edf4ee;color:#183426;font:14px system-ui";
- const status=document.createElement("span");status.setAttribute("role","status");status.setAttribute("aria-live","polite");bar.append(status);
- const message=t=>{status.textContent=t;};
- const button=(text,action)=>{const b=document.createElement("button");b.type="button";b.textContent=text;b.onclick=action;bar.append(b);};
+ const {bar,message,button}=createAccountBar();
  button("Tentar guardar",()=>flush().catch(e=>alert(e.message)));
  button("Exportar cópia",()=>download(localStorage.getItem(key)||"{}"));
  button("Terminar sessão",async()=>{try{await flush();await signOut(auth);}catch(e){alert("A sessão não foi terminada: "+e.message);}});
- document.body.prepend(bar);const oldExit=document.getElementById("sair");if(oldExit)oldExit.hidden=true;
+ document.body.prepend(bar);const oldExit=document.getElementById("sair");if(oldExit){const legacyBar=oldExit.closest('[aria-label="Sessão do utilizador"]');if(legacyBar)legacyBar.remove();else oldExit.hidden=true;}
  function queue(state){validate(state);pending=JSON.stringify(state);localStorage.setItem(pendingKey,JSON.stringify({revision,state:pending}));message("Alterações por guardar…");clearTimeout(timeout);timeout=setTimeout(()=>flush().catch(()=>{}),1000);}
  async function flush(){
   clearTimeout(timeout);if(running){await running;if(pending)return flush();return;}if(!pending)return;if(conflict)throw Error("Conflito: exporta a cópia local e recarrega a página.");
@@ -38,5 +36,5 @@ export async function start(){
  window.addEventListener("storage",e=>{if(e.key===key){conflict=true;message("Outra janela alterou o estudo. Exporta e recarrega antes de continuar.");}});
  onAuthStateChanged(auth,u=>{if(!u||u.uid!==user.uid)location.replace(new URL("login.html",root));});
  document.addEventListener("click",e=>{const a=e.target.closest("a[href]");if(!a||e.defaultPrevented||e.ctrlKey||e.metaKey||e.shiftKey||e.altKey||a.target==="_blank"||a.hasAttribute("download"))return;const dest=new URL(a.href,location.href);if(dest.origin!==location.origin||dest.pathname===location.pathname)return;if(pending||running){e.preventDefault();flush().then(()=>location.assign(dest.href)).catch(err=>alert(err.message));}},true);
- const api={key,queue,flush};window.IanCloud=api;return api;
+ const api={key,queue,flush};window.IanCloud=api;enhancePortal(api,bar);return api;
 }
