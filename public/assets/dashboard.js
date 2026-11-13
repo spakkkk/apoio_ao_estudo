@@ -27,7 +27,7 @@ export function enhanceDashboard(api){
   let state;try{state=JSON.parse(localStorage.getItem(api.key)||"{}");}catch{return;}
   const today=todayISO(),model=dashboardModel(data,state,today);
   for(const panel of view.querySelectorAll(".right-col .panel"))if(panel.querySelector("h3")?.textContent.trim()==="Pequenos passos")panel.remove();
-  const stats=view.querySelectorAll(".stats .stat");text(stats[1]?.querySelector("strong"),model.sections+"/"+model.sectionTotal);text(stats[1]?.querySelector("small"),"Secções por concluir");text(stats[2]?.querySelector("strong"),model.quizzes+"/"+model.quizTotal);text(stats[2]?.querySelector("small"),"Quizzes por concluir");
+  const stats=view.querySelectorAll(".stats .stat"),completedSections=Math.max(0,model.sectionTotal-model.sections),completedQuizzes=Math.max(0,model.quizTotal-model.quizzes);text(stats[1]?.querySelector("strong"),completedSections+"/"+model.sectionTotal);text(stats[1]?.querySelector("small"),"Secções Concluídas - Faltam concluir "+model.sections);text(stats[2]?.querySelector("strong"),completedQuizzes+"/"+model.quizTotal);text(stats[2]?.querySelector("small"),"Quizzes Concluídos - Faltam concluir "+model.quizzes);
   hero(view.querySelector(".hero"),model,today);
   const panel=[...view.querySelectorAll(".right-col .panel")].find(n=>n.querySelector(".calendar")||n.classList.contains("pa-agenda"));if(panel)calendar(panel,model,today);
   const resume=view.querySelector(".pa-resume");if(resume){const href=resume.querySelector("a")?.href,item=model.all.find(x=>href&&href.startsWith(new URL(x.event.path,ROOT).href.replace(/[^/]*$/,"")));const hide=!!item?.done;if(resume.hidden!==hide)resume.hidden=hide;}
