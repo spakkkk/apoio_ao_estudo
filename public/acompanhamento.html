@@ -1,4 +1,33 @@
 <!doctype html>
-<html lang="pt-PT"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Acompanhamento do Ian | Apoio ao Estudo</title><link rel="icon" href="./assets/favicon.svg" type="image/svg+xml"><style>
-*{box-sizing:border-box}body{margin:0;background:#f3f5f1;color:#24372c;font:16px system-ui,sans-serif}main{max-width:1100px;margin:auto;padding:24px}header,.actions{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}p{line-height:1.6}button,select{font:inherit;padding:10px;border:1px solid #b8c9bc;border-radius:8px;background:white;color:#24372c}button{cursor:pointer}button:disabled{opacity:.6}.panel{background:white;border:1px solid #dce4dc;border-radius:16px;padding:20px;margin:16px 0}.muted,small{color:#55675b}details{margin:12px 0;border:1px solid #dce4dc;border-radius:10px;padding:14px}summary{cursor:pointer;line-height:1.6}.answer{white-space:pre-wrap;overflow-wrap:anywhere}li{margin:8px 0}#status{padding:12px;border-left:4px solid #65856a;background:#e8efe7}.question{border-top:1px solid #dce4dc;padding:12px 0}[hidden]{display:none!important}@media print{button,select{display:none}body{background:white}main{padding:0}.panel{break-inside:avoid}}
-</style><script src="./data/content.js" defer></script><script src="./disciplinas/filosofia/prova-comum-2026-11-19/filosofia-data.js" defer></script><script type="module" src="./assets/acompanhamento.js"></script></head><body><main><header><div><p class="muted">Consulta sem edição</p><h1>Acompanhamento do Ian</h1></div><div class="actions"><button id="print" hidden>Imprimir / guardar PDF</button><button id="logout" hidden>Terminar sessão</button></div></header><p id="status" role="status" aria-live="polite">A verificar a sessão…</p><div id="report" hidden></div><section id="audit" class="panel" hidden><h2>Histórico detalhado de atividade</h2><p>Registado a partir da publicação desta versão. As datas das ações usam o relógio do dispositivo; cada lote inclui a confirmação de gravação do servidor. Não mede tempo efetivo de estudo. Edições consecutivas da mesma resposta em menos de dois segundos são agrupadas.</p><button id="refresh">Atualizar atividade</button><p id="audit-status" role="status"></p><div id="events"></div><button id="more" hidden>Carregar registos anteriores</button></section><noscript>Ativa o JavaScript para consultar o acompanhamento.</noscript></main></body></html>
+<html lang="pt-PT">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#294737">
+<title>Acompanhamento do Ian | Apoio ao Estudo</title>
+<link rel="icon" href="./assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="./assets/style.css"><link rel="stylesheet" href="./assets/acompanhamento.css">
+<script src="./data/content.js" defer></script>
+<script src="./disciplinas/filosofia/prova-comum-2026-11-19/filosofia-data.js" defer></script>
+<script type="module" src="./assets/acompanhamento.js"></script>
+</head>
+<body class="ac-page">
+<a class="skip" href="#content">Saltar para o conteúdo</a>
+<aside class="sidebar" aria-label="Área de acompanhamento">
+<a class="brand" href="./acompanhamento.html"><img src="./assets/favicon.svg" alt=""><span>Apoio ao Estudo<small>ACOMPANHAMENTO</small></span></a>
+<div class="navlabel">O PERCURSO DO IAN</div>
+<nav class="nav" aria-label="Navegação do acompanhamento">
+<a href="#report"><span class="ac-nav-mark" aria-hidden="true"></span>Progresso e resultados</a>
+<a href="#audit"><span class="ac-nav-mark ac-nav-mark-alt" aria-hidden="true"></span>Histórico de atividade</a>
+<a href="#how-it-works"><span class="ac-nav-mark ac-nav-mark-outline" aria-hidden="true"></span>Sobre os registos</a>
+</nav>
+<div class="sidefoot"><span class="eyebrow">Um passo de cada vez</span><p>Compreender o percurso.<br>Reconhecer o progresso.</p><span class="pill">Acesso de leitura</span></div>
+</aside>
+<main class="main" id="content" tabindex="-1">
+<header class="topbar"><span class="crumb">O meu espaço / Acompanhamento</span><div class="profile"><span class="avatar" aria-hidden="true">A</span><span>Conta de acompanhamento<br><span class="muted">Progresso do Ian</span></span></div><div class="ac-account-actions"><button class="btn" id="print" type="button" hidden>Imprimir / guardar PDF</button><button class="btn" id="logout" type="button" hidden>Terminar sessão</button></div></header>
+<section class="hero ac-hero" aria-labelledby="ac-title"><div class="hero-copy"><span class="eyebrow">O percurso de aprendizagem</span><h1 id="ac-title">Acompanhamento do Ian</h1><p>As matérias revistas, as respostas e os resultados, num só espaço. Acompanha cada novo passo com mais clareza.</p><div class="actions"><a class="btn lime" href="#report">Consultar progresso</a><a class="btn ghost" href="#audit">Ver atividade</a></div></div><div class="hero-art" aria-hidden="true"><div class="orb"></div><div class="art-card ac-art-card"><span class="eyebrow">ESTUDAR PARA CRESCER</span><span class="ac-art-title">Cada passo<br>conta.</span><div class="line"></div><div class="line short"></div></div></div></section>
+<p id="status" class="ac-status" role="status" aria-live="polite">A verificar a sessão…</p>
+<div id="report" hidden></div>
+<section id="audit" class="panel ac-audit" hidden aria-labelledby="audit-title"><div class="section-head"><div><span class="eyebrow">Os passos mais recentes</span><h2 id="audit-title">Histórico de atividade</h2></div><button class="btn primary" id="refresh" type="button">Atualizar atividade</button></div><p class="muted ac-description">Abre cada registo para consultar os detalhes. Os mais recentes aparecem primeiro.</p><details id="how-it-works" class="ac-help"><summary>Como interpretar estes registos</summary><p>O histórico começa com a utilização da versão que ativou o registo detalhado. As datas das ações usam o relógio do dispositivo; cada lote inclui a confirmação de gravação do servidor. Não mede tempo efetivo de estudo. Edições consecutivas da mesma resposta em menos de dois segundos são agrupadas.</p></details><p id="audit-status" class="muted ac-description" role="status"></p><div id="events"></div><button class="btn ac-more" id="more" type="button" hidden>Carregar registos anteriores</button></section>
+<footer class="footer"><span>Portal de Apoio ao Estudo · Compreender o percurso, apoiar a aprendizagem.</span><a href="./privacidade.html">Privacidade e dados</a></footer>
+<noscript><p class="notice">Ativa o JavaScript para consultar o acompanhamento.</p></noscript>
+</main>
+</body></html>

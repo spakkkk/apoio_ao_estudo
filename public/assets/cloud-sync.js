@@ -19,7 +19,6 @@ export async function start(){
  button("Tentar guardar",()=>flush().catch(e=>alert(e.message)));
  button("Exportar cópia",()=>download(JSON.stringify({progress:JSON.parse(localStorage.getItem(key)||"{}"),activity:journal?.pending()||[]})));
  button("Terminar sessão",async()=>{try{await flush();await signOut(auth);}catch(e){alert("A sessão não foi terminada: "+e.message);}});
- const notice=document.createElement('small');notice.textContent='O progresso e a atividade de estudo são partilhados com a conta de acompanhamento.';bar.append(notice);
  document.body.prepend(bar);const oldExit=document.getElementById("sair");if(oldExit){const legacyBar=oldExit.closest('[aria-label="Sessão do utilizador"]');if(legacyBar)legacyBar.remove();else oldExit.hidden=true;}
  function queue(state){validate(state);journal?.capture(state);pending=JSON.stringify(state);localStorage.setItem(pendingKey,JSON.stringify({revision,state:pending}));message("Alterações por guardar…");clearTimeout(timeout);timeout=setTimeout(()=>flush().catch(()=>{}),1000);}
  async function flush(){
