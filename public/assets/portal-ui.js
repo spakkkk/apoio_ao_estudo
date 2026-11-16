@@ -3,11 +3,15 @@ const CURRENT="geografia-a/prova-comum-2026-11-13";
 const el=(tag,cls,text)=>{const n=document.createElement(tag);if(cls)n.className=cls;if(text!==undefined)n.textContent=text;return n;};
 export function getStudySummary(data,state,subject,event){
  const current=subject.id+"/"+event.id===CURRENT;
+ const nested=event.progressKey?state[event.progressKey]:null;
+ const source=nested&&typeof nested==="object"?nested:state;
  const lessons=Array.isArray(event.lessonIds)?event.lessonIds:current?(data.lessons||[]).map(l=>l.id):null;
  const quizzes=Array.isArray(event.quizIds)?event.quizIds:current?(data.quizzes||[]).map(q=>q.id):null;
  if(!lessons||!quizzes)return null;
- const read=new Set(state.read||[]),done=new Set((state.history||[]).map(r=>r.quizId));
- return {read:lessons.filter(id=>read.has(id)).length,total:lessons.length,quizzes:quizzes.filter(id=>done.has(id)).length,quizTotal:quizzes.length};
+ const lessonIds=[...new Set(lessons)],quizIds=[...new Set(quizzes)];
+ const read=new Set(Array.isArray(source.read)?source.read:[]);
+ const done=new Set((Array.isArray(source.history)?source.history:[]).filter(r=>!r.practice).map(r=>r.quizId));
+ return {read:lessonIds.filter(id=>read.has(id)).length,total:lessonIds.length,quizzes:quizIds.filter(id=>done.has(id)).length,quizTotal:quizIds.length};
 }
 export function findResume(data,state){
  const options=[];
@@ -17,6 +21,16 @@ export function findResume(data,state){
   for(const q of data.quizzes||[]){const d=state.drafts?.[q.id];if(!ids.includes(q.id)||!d||!q.questions?.length)continue;
    const index=Math.max(0,Math.min(q.questions.length-1,Number(d.index)||0));
    options.push({title:q.title,index,total:q.questions.length,start:Number(d.start)||0,path:event.path.replace(/[^/]*$/,"quiz-"+q.id+".html")});
+  }
+ }
+ // pa-est: resume assessment-specific drafts without mixing their answer formats.
+ for(const subject of data.subjects||[])for(const event of subject.events||[]){
+  if(!event.progressKey)continue;
+  const drafts=state[event.progressKey]?.drafts||{};
+  for(const q of event.quizMeta||[]){const d=drafts[q.id];if(!d)continue;
+   const total=Array.isArray(d.order)?d.order.length:q.questionCount;if(!total)continue;
+   const index=Math.max(0,Math.min(total-1,Number(d.index)||0));
+   options.push({title:q.title,index,total,start:Number(d.start)||0,path:event.path+"#quiz="+encodeURIComponent(q.id)});
   }
  }
  return options.sort((a,b)=>b.start-a.start)[0]||null;

@@ -35,3 +35,10 @@ Desktop.ini
 ficheiros-filosofia/
 instalar-filosofia.cjs
 INSTALAR-FILOSOFIA.cmd
+
+.filosofia-correcao-backup/
+ficheiros-correcao/
+corrigir-filosofia.cjs
+CORRIGIR-FILOSOFIA.cmd
+PUBLICAR-PORTAL.cmd
+validar-publicacao.cjs

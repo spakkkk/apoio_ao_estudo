@@ -6,8 +6,8 @@ export function todayISO(now=new Date()){return now.getFullYear()+"-"+String(now
 const dateValue=value=>{if(!/^\d{4}-\d{2}-\d{2}$/.test(value||""))return NaN;const n=Date.parse(value+"T00:00:00Z");return Number.isFinite(n)&&new Date(n).toISOString().slice(0,10)===value?n:NaN;};
 export function statusText(item,today){if(item.done)return "Concluido!";const days=(dateValue(item.event.date)-dateValue(today))/86400000;return !Number.isFinite(days)?"Data a definir":days===0?"É hoje!":days>0?"Faltam "+days+" dias":"Avaliação por concluir";}
 export function dashboardModel(data,state,today){
- const checks=state.topicChecks||{},all=[];
- for(const subject of data.subjects||[])for(const event of subject.events||[])all.push({subject,event,key:subject.id+"/"+event.id,done:checks["assessment:"+subject.id+"/"+event.id]===true});
+ const checks=state.topicChecks||{},all=[],seenAssessments=new Set(); // pa-est: unique assessment keys
+ for(const subject of data.subjects||[])for(const event of subject.events||[]){const key=subject.id+"/"+event.id;if(seenAssessments.has(key))continue;seenAssessments.add(key);all.push({subject,event,key,done:checks["assessment:"+key]===true});}
  all.sort((a,b)=>(a.event.date||"9999").localeCompare(b.event.date||"9999")||a.key.localeCompare(b.key));
  const pending=all.filter(item=>!item.done),next=pending.find(item=>Number.isFinite(dateValue(item.event.date))&&item.event.date>=today)||pending[0]||null;
  let sections=0,quizzes=0,sectionTotal=0,quizTotal=0;

@@ -72,7 +72,46 @@
           "title": "Introdução à filosofia e liberdade na ação humana",
           "path": "disciplinas/filosofia/prova-comum-2026-11-19/index.html",
           "sectionCount": 12,
-          "quizCount": 3
+          "quizCount": 3,
+          "lessonIds": [
+            "fi26-01",
+            "fi26-02",
+            "fi26-03",
+            "fi26-04",
+            "fi26-05",
+            "fi26-06",
+            "fi26-07",
+            "fi26-08",
+            "fi26-09",
+            "fi26-10",
+            "fi26-11",
+            "fi26-12"
+          ],
+          "quizIds": [
+            "fi26-fundamentos",
+            "fi26-teorias",
+            "fi26-final"
+          ],
+          "quizMeta": [
+            {
+              "id": "fi26-fundamentos",
+              "title": "Quiz 1 · Aprender a questionar",
+              "questionCount": 16
+            },
+            {
+              "id": "fi26-teorias",
+              "title": "Quiz 2 · O duelo das teorias",
+              "questionCount": 16
+            },
+            {
+              "id": "fi26-final",
+              "title": "Quiz 3 · Treino misto",
+              "questionCount": 16
+            }
+          ],
+          "progressKey": "philosophy20261119",
+          "minutes": 110,
+          "pdfPath": "disciplinas/filosofia/prova-comum-2026-11-19/guia-filosofia.pdf"
         }
       ]
     }
