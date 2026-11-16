@@ -30,3 +30,8 @@ Desktop.ini
 
 # Manter no Git: public/, .firebaserc, firebase.json,
 # firestore.rules, firestore.indexes.json e configuracao Web do Firebase.
+
+.filosofia-backup/
+ficheiros-filosofia/
+instalar-filosofia.cjs
+INSTALAR-FILOSOFIA.cmd

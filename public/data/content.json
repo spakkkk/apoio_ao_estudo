@@ -1,7 +1,7 @@
 {
   "title": "Portal de Apoio ao Estudo",
   "student": "Ian",
-  "updated": "2026-11-10",
+  "updated": "2026-11-16",
   "subjects": [
     {
       "id": "geografia-a",
@@ -62,8 +62,19 @@
       "short": "FI",
       "color": "#d7dfef",
       "description": "Questionar e construir argumentos.",
-      "updated": null,
-      "events": []
+      "updated": "2026-11-16",
+      "events": [
+        {
+          "id": "prova-comum-2026-11-19",
+          "type": "Prova comum",
+          "date": "2026-11-19",
+          "time": "10:20–12:10",
+          "title": "Introdução à filosofia e liberdade na ação humana",
+          "path": "disciplinas/filosofia/prova-comum-2026-11-19/index.html",
+          "sectionCount": 12,
+          "quizCount": 3
+        }
+      ]
     }
   ],
   "lessons": [
