@@ -42,3 +42,8 @@ corrigir-filosofia.cjs
 CORRIGIR-FILOSOFIA.cmd
 PUBLICAR-PORTAL.cmd
 validar-publicacao.cjs
+
+.portal-estrutura-backup/
+ficheiros-estrutura/
+repor-estrutura-filosofia.cjs
+REPOR-ESTRUTURA-FILOSOFIA.cmd
