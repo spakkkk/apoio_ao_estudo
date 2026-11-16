@@ -1,67 +1,93 @@
-import {initializeApp,getApps,getApp} from 'https://www.gstatic.com/firebasejs/13.3.0/firebase-app.js';
+import {initializeApp} from 'https://www.gstatic.com/firebasejs/13.3.0/firebase-app.js';
 import {getAuth,onAuthStateChanged,signOut} from 'https://www.gstatic.com/firebasejs/13.3.0/firebase-auth.js';
-import {getFirestore,doc,onSnapshot} from 'https://www.gstatic.com/firebasejs/13.3.0/firebase-firestore.js';
-const config={apiKey:'AIzaSyC7qmpQmNAA1Y5WDmtKvamS1k4k7qcELNI',authDomain:'apoio-ao-estudo.firebaseapp.com',projectId:'apoio-ao-estudo',storageBucket:'apoio-ao-estudo.firebasestorage.app',messagingSenderId:'740789054680',appId:'1:740789054680:web:c068304d0b8bbcf96a3bad'};
-const SUPERVISOR='6X1jNaIZgMNO6CgkMXndkAHiB1m1',IAN='e8qdr6yFCXYkZco5QZafsswdRkZ2';
-const app=getApps().length?getApp():initializeApp(config),auth=getAuth(app),db=getFirestore(app);
-const status=document.getElementById('status'),report=document.getElementById('report'),logout=document.getElementById('logout'),print=document.getElementById('print');
-let unsubscribe=null;
-function el(tag,text,parent){const n=document.createElement(tag);if(text!==undefined)n.textContent=String(text);if(parent)parent.append(n);return n;}
-function plain(value){const d=new DOMParser().parseFromString(String(value??''),'text/html');return d.body.textContent||'';}
-function date(value){const d=value?.toDate?value.toDate():new Date(value);return Number.isFinite(d.getTime())?d.toLocaleString('pt-PT'):'Data indisponível';}
-function panel(title){const p=el('section',undefined,report);p.className='panel';el('h2',title,p);return p;}
-function list(parent,items,empty){if(!items.length){el('p',empty,parent);return;}const ul=el('ul',undefined,parent);items.forEach(x=>el('li',x,ul));}
-function valueText(value){if(value===null||value===undefined||value==='')return 'Sem resposta';return typeof value==='object'?JSON.stringify(value,null,2):String(value);}
-function answer(q,value){if(value===undefined||value===null||String(value).trim()==='')return 'Sem resposta';if(q?.t==='mc')return plain(q.o?.[Number(value)]??value);if(q?.t==='tf')return String(value)==='true'?'Verdadeiro':'Falso';return valueText(value);}
-function render(data){
- const s=typeof data.state==='string'?JSON.parse(data.state):data.state;
- if(!s||!Array.isArray(s.read)||!Array.isArray(s.plan)||!Array.isArray(s.history)||!s.drafts||typeof s.drafts!=='object'||Array.isArray(s.drafts))throw Error('Formato do progresso não reconhecido.');
- report.replaceChildren();report.hidden=false;print.hidden=false;
- const meta=panel('Dados guardados na conta');
- el('p','Última gravação do progresso: '+(data.updatedAt?date(data.updatedAt):'Data indisponível'),meta);
- el('p','Esta data indica uma gravação, não o último login nem tempo efetivo de estudo. A consulta atualiza-se enquanto esta página estiver aberta.',meta);
- const stats=el('div',undefined,report);stats.className='stats';
- for(const [label,value] of [['Secções assinaladas',s.read.length],['Tarefas concluídas',s.plan.length],['Tentativas disponíveis',s.history.length],['Quizzes em curso',Object.keys(s.drafts).length]]){const p=el('div',undefined,stats);p.className='stat';el('strong',value,p);el('span',label,p);}
- const lessons=window.PORTAL_DATA?.lessons||[],quizzes=window.PORTAL_DATA?.quizzes||[];
- const progress=panel('Progresso atual');
- el('h3','Secções revistas',progress);
- list(progress,s.read.map(id=>{const l=lessons.find(x=>x.id===id);return l?plain(l.title)+' ('+id+')':String(id);}), 'Nenhuma secção assinalada nesta lista.');
- el('h3','Tarefas concluídas',progress);
- const plans={ler:'Rever o guia',treinar:'Fazer um quiz',corrigir:'Voltar aos erros'};
- list(progress,s.plan.map(id=>plans[id]||String(id)),'Nenhuma tarefa assinalada.');
- const checks=s.topicChecks;
- if(checks&&typeof checks==='object'){el('h3','Registos adicionais de matéria',progress);el('p','Chaves e valores tal como guardados pelo portal; os identificadores não são datas de estudo.',progress);const pre=el('pre',JSON.stringify(checks,null,2),progress);pre.className='answer';}
- const drafts=panel('Quizzes em curso');
- const entries=Object.entries(s.drafts);
- if(!entries.length)el('p','Não existem rascunhos guardados.',drafts);
- for(const [id,d] of entries){const q=quizzes.find(x=>x.id===id),details=el('details',undefined,drafts);el('summary',q?plain(q.title):'Quiz '+id,details);el('p','Início registado: '+(d?.start?date(d.start):'Indisponível'),details);el('p','Respostas preenchidas: '+Object.values(d?.answers||{}).filter(x=>String(x??'').trim()).length,details);el('p','Um rascunho guardado não significa que o Ian esteja online neste momento.',details);}
- const history=panel('Histórico de resultados');
- el('p','Mostra as tentativas ainda presentes no progresso guardado. Não representa um histórico de todos os cliques ou alterações de matéria.',history);
- if(!s.history.length)el('p','Ainda não existem tentativas guardadas.',history);
- const ordered=[...s.history].sort((a,b)=>(Date.parse(b.at)||0)-(Date.parse(a.at)||0));
- for(const r of ordered){
- const details=el('details',undefined,history),q=quizzes.find(x=>x.id===r.quizId);
- const score=Number(r.score),max=Number(r.max),valid=Number.isFinite(score)&&Number.isFinite(max)&&max>0;
- el('summary',plain(r.title||r.quizId||'Quiz')+' · '+date(r.at)+' · '+(valid?score+'/'+max+' ('+Math.round(score/max*100)+'%)':'Pontuação indisponível'),details);
- const elapsed=Number(r.elapsed);if(Number.isFinite(elapsed)&&elapsed>=0)el('p','Tempo decorrido da tentativa: '+Math.floor(elapsed/60)+' min '+Math.floor(elapsed%60)+' s. Pode incluir períodos fora da página.',details);
- if(Number(r.manual)>0)el('p','Avaliação manual prevista: '+r.manual+' pontos. A pontuação automática não é uma classificação final.',details);
- const answers=r.answers&&typeof r.answers==='object'?r.answers:{};
- if(!q)el('p','Enunciados não disponíveis no catálogo desta página. Apresentam-se as respostas guardadas, sem inventar enunciados ou correções.',details);
- const indexes=q?.questions? q.questions.map((_,i)=>String(i)):Object.keys(answers);
- if(!indexes.length)el('p','Sem respostas disponíveis.',details);
- indexes.forEach(index=>{const question=q?.questions?.[Number(index)],item=el('div',undefined,details);item.className='question';el('h3','Pergunta '+(Number.isFinite(Number(index))?Number(index)+1:index),item);if(question)el('p',plain(question.q),item);const p=el('p','Resposta guardada: '+answer(question,answers[index]),item);p.className='answer';if(question?.t==='op'){el('p','Resposta extensa: exige avaliação humana.',item);if(question.m)el('p','Modelo de resposta atual: '+plain(question.m),item);}else if(question&&question.a!==undefined){el('p','Solução do catálogo atual: '+answer(question,question.a)+(question.u?' '+plain(question.u):''),item);if(question.e)el('p',plain(question.e),item);}});
+import {getFirestore,doc,onSnapshot,collection,query,orderBy,limit,startAfter,getDocs} from 'https://www.gstatic.com/firebasejs/13.3.0/firebase-firestore.js';
+const app=initializeApp({apiKey:'AIzaSyC7qmpQmNAA1Y5WDmtKvamS1k4k7qcELNI',authDomain:'apoio-ao-estudo.firebaseapp.com',projectId:'apoio-ao-estudo',storageBucket:'apoio-ao-estudo.firebasestorage.app',messagingSenderId:'740789054680',appId:'1:740789054680:web:c068304d0b8bbcf96a3bad'}),auth=getAuth(app),db=getFirestore(app),IAN='e8qdr6yFCXYkZco5QZafsswdRkZ2',SUPERVISOR='6X1jNaIZgMNO6CgkMXndkAHiB1m1';
+const $=id=>document.getElementById(id);let unsub=null,cursor=null,busy=false,generation=0;
+function el(tag,text,parent){const n=document.createElement(tag);if(text!==undefined)n.textContent=String(text);parent?.append(n);return n;}
+function plain(x){return new DOMParser().parseFromString(String(x??''),'text/html').body.textContent||'';}
+function date(x){const d=x?.toDate?x.toDate():new Date(x);return Number.isFinite(d.getTime())?d.toLocaleString('pt-PT'):'Data indisponível';}
+const data=subject=>subject==='filosofia'?window.FILOSOFIA_DATA:window.PORTAL_DATA;
+const subjectName=s=>s==='filosofia'?'Filosofia':s==='geografia'?'Geografia A':'Portal';
+const quiz=(subject,id)=>data(subject)?.quizzes?.find(q=>q.id===id);
+function label(subject,id){
+ if(String(id).startsWith('assessment:')){
+  const path=id.slice(11),[sid,eid]=path.split('/');
+  const s=window.PORTAL_DATA?.subjects?.find(s=>s.id===sid),e=s?.events?.find(e=>e.id===eid);
+  return (s?.name||sid)+' — '+(e?.title||eid);
  }
- el('p','Os enunciados e modelos apresentados pertencem ao catálogo atual, não a uma cópia histórica da versão do quiz. Esta página não modifica o progresso.',report);
+ const d=data(subject),l=d?.lessons?.find(l=>l.id===id);if(l)return plain(l.title);
+ if(subject==='filosofia'&&String(id).includes(':')){const [lesson,n]=id.split(':'),l=d?.lessons?.find(l=>l.id===lesson);if(l)return plain(l.title)+' — '+plain(l.points?.[Number(n)]||id);}
+ if(subject==='geografia'){
+  const m=String(id).match(/^(.*)-(\d+)$/),l=m&&d?.lessons?.find(l=>l.id===m[1]);if(l)return plain(l.title)+' — '+plain(l.points?.[Number(m[2])]||id);
+ }
+ return ({ler:'Rever o guia',treinar:'Fazer um quiz',corrigir:'Voltar aos erros'})[id]||quiz(subject,id)?.title||String(id);
 }
-logout.onclick=async()=>{logout.disabled=true;try{await signOut(auth);location.replace('./login.html');}catch{status.textContent='Não foi possível terminar a sessão. Tenta novamente.';logout.disabled=false;}};
-print.onclick=()=>window.print();
+function answer(q,a){if(a===null||a===undefined||String(a).trim()==='')return 'Sem resposta';if(q?.t==='mc')return plain(q.o?.[Number(a)]??a);if(q?.t==='tf')return String(a)==='true'?'Verdadeiro':'Falso';return typeof a==='object'?JSON.stringify(a):String(a);}
+function result(parent,r,subject,captured=null){
+ const d=el('details',undefined,parent);el('summary',plain(r.title||label(subject,r.quizId))+' · '+date(r.at)+' · '+r.score+'/'+r.max+' automáticos'+(r.practice?' · treino focado':''),d);
+ const elapsed=Number(r.elapsed);if(Number.isFinite(elapsed))el('p','Tempo decorrido: '+Math.floor(elapsed/60)+' min '+Math.floor(elapsed%60)+' s (pode incluir pausas).',d);
+ if(r.manual)el('p',r.manual+' pontos de respostas extensas previstos para avaliação humana. Não é uma nota final.',d);
+ const qs=captured||quiz(subject,r.quizId)?.questions||[];
+ el('p',captured?'Enunciados preservados no registo desta tentativa.':'Enunciados do catálogo atual; não são uma cópia histórica.',d);
+ const order=subject==='filosofia'?(r.order||Object.keys(r.answers||{})):qs.length?qs.map((_,i)=>String(i)):Object.keys(r.answers||{});
+ order.forEach((key,i)=>{const q=subject==='filosofia'?qs.find(q=>q.id===key):qs[Number(key)],section=el('div',undefined,d);section.className='question';el('h3','Pergunta '+(i+1),section);el('p',q?plain(q.q):'Enunciado indisponível ('+key+')',section);const a=el('p','Resposta: '+answer(q,r.answers?.[key]),section);a.className='answer';if(q?.t==='op'){if(q.m)el('p','Modelo: '+plain(q.m),section);if(q.pts){const ul=el('ul',undefined,section);q.pts.forEach(p=>el('li',plain(p),ul));}}else if(q){el('p','Solução: '+answer(q,q.a),section);if(q.e)el('p',plain(q.e),section);}});
+ return d;
+}
+function panel(title,parent=$('report')){const p=el('section',undefined,parent);p.className='panel';el('h2',title,p);return p;}
+function items(parent,values,empty){if(!values.length){el('p',empty,parent);return;}const ul=el('ul',undefined,parent);values.forEach(v=>el('li',v,ul));}
+function render(raw){
+ const s=JSON.parse(raw.state);if(!s||!Array.isArray(s.history))throw Error('Formato de progresso inválido.');
+ $('report').replaceChildren();$('report').hidden=false;$('print').hidden=false;
+ const meta=panel('Estado atual');el('p','Última gravação: '+(raw.updatedAt?date(raw.updatedAt):'Indisponível')+'. Não indica o último login.',meta);
+ el('p','As marcações anteriores à ativação do histórico não têm data de ação. Uma avaliação marcada como concluída é uma declaração do utilizador, não prova de que reviu todos os conteúdos.',meta);
+ const assessments=Object.entries(s.topicChecks||{}).filter(([k])=>k.startsWith('assessment:'));
+ items(meta,assessments.map(([k,v])=>label('geografia',k)+': '+(v?'marcada como concluída':'não marcada como concluída')),'Sem avaliações marcadas como concluídas.');
+ for(const [subject,state] of [['geografia',s],['filosofia',s.philosophy20261119||{}]]){
+  const p=panel(subjectName(subject));
+  el('h3','Etapas revistas',p);items(p,(state.read||[]).map(id=>label(subject,id)),'Nenhuma etapa assinalada.');
+  el('h3','Ideias assinaladas como lidas e compreendidas',p);
+  const checks=subject==='filosofia'?state.checks||{}:s.topicChecks||{};
+  items(p,Object.entries(checks).filter(([k,v])=>v&&!k.startsWith('assessment:')).map(([k])=>label(subject,k)),'Nenhuma ideia assinalada.');
+  if(subject==='geografia'){el('h3','Tarefas concluídas',p);items(p,(state.plan||[]).map(id=>label(subject,id)),'Nenhuma tarefa assinalada.');}
+  el('h3','Quizzes em curso',p);const drafts=Object.entries(state.drafts||{});if(!drafts.length)el('p','Sem rascunhos.',p);
+  for(const [id,draft] of drafts){const details=el('details',undefined,p);el('summary',label(subject,id)+' · início '+date(draft.start),details);el('p','Rascunho guardado; não indica presença online.',details);const q=quiz(subject,id);for(const [key,a] of Object.entries(draft.answers||{})){const question=subject==='filosofia'?q?.questions?.find(x=>x.id===key):q?.questions?.[Number(key)];el('p',(question?plain(question.q):'Pergunta '+key)+' — '+answer(question,a),details);}}
+  el('h3','Tentativas no progresso atual',p);const h=state.history||[];if(!h.length)el('p','Sem tentativas guardadas.',p);[...h].sort((a,b)=>(Date.parse(b.at)||0)-(Date.parse(a.at)||0)).forEach(r=>result(p,r,subject));
+ }
+}
+function event(parent,e){
+ const d=el('details',undefined,parent),name=e.label||label(e.subject,e.key||'');
+ const names={read:(e.value?'Marcou etapa como revista: ':'Desmarcou etapa: ')+name,plan:(e.value?'Concluiu tarefa: ':'Desmarcou tarefa: ')+name,check:(e.value?'Assinalou: ':'Retirou a marcação: ')+name,started:'Iniciou um rascunho: '+name,draftRemoved:'Removeu/substituiu um rascunho: '+name,answer:'Guardou/alterou resposta: '+name,completed:'Concluiu um quiz: '+name,page:'Abriu uma página do portal',coach:'Atualizou exercício de escrita'};
+ el('summary',date(e.at)+' · '+subjectName(e.subject)+' · '+(names[e.type]||e.type),d);
+ if(e.type==='completed')result(d,e.result,e.subject,e.catalogCaptured?e.questions:null);
+ if(e.type==='answer'){
+  const q=quiz(e.subject,e.key),question=e.questionSnapshot||(e.subject==='filosofia'?q?.questions?.find(x=>x.id===e.question):q?.questions?.[Number(e.question)]);
+  el('p',question?plain(question.q):'Pergunta '+e.question,d);el('p','Resposta guardada: '+answer(question,e.value),d).className='answer';el('small',e.questionSnapshot?'Enunciado e opções preservados com a resposta.':'Enunciado e opções do catálogo atual.',d);
+ }
+ if(e.page)el('p','Página: '+e.page,d);
+}
+async function load(reset=false){
+ if(busy)return;busy=true;const g=generation;$('more').disabled=true;$('refresh').disabled=true;
+ if(reset){cursor=null;$('events').replaceChildren();}
+ $('audit-status').textContent='A carregar atividade…';
+ try{
+  const base=[orderBy('revision','desc'),limit(20)];if(cursor)base.splice(1,0,startAfter(cursor));
+  const snap=await getDocs(query(collection(db,'users',IAN,'activity'),...base));
+  if(g!==generation)return;
+  for(const doc of snap.docs){const b=doc.data(),box=el('section',undefined,$('events'));el('h3','Gravação confirmada: '+date(b.savedAt)+' · revisão '+b.revision,box);[...(b.events||[])].reverse().forEach(e=>event(box,e));}
+  cursor=snap.docs.at(-1)||cursor;$('more').hidden=snap.size<20;
+  $('audit-status').textContent=$('events').children.length?'Atividade carregada. Usa Atualizar atividade para obter novos registos.':'Ainda sem atividade detalhada. O Ian precisa de abrir a versão atualizada do portal e guardar novas ações.';
+ }catch(error){if(g===generation)$('audit-status').textContent='Não foi possível carregar o histórico: '+error.message;}
+ finally{busy=false;$('more').disabled=false;$('refresh').disabled=false;}
+}
+$('refresh').onclick=()=>load(true);$('more').onclick=()=>load();$('print').onclick=()=>{document.querySelectorAll('details').forEach(d=>d.open=true);window.print();};
+$('logout').onclick=async()=>{try{await signOut(auth);location.replace('./login.html');}catch{$('status').textContent='Não foi possível terminar a sessão.';}};
 onAuthStateChanged(auth,user=>{
- if(unsubscribe){unsubscribe();unsubscribe=null;}report.replaceChildren();report.hidden=true;print.hidden=true;logout.hidden=!user;
+ generation++;unsub?.();unsub=null;$('report').replaceChildren();$('events').replaceChildren();$('report').hidden=true;$('audit').hidden=true;$('print').hidden=true;$('logout').hidden=!user;
  if(!user){location.replace('./login.html');return;}
- if(user.uid!==SUPERVISOR){status.textContent='Esta página está reservada à conta de acompanhamento.';const a=el('a',' Voltar ao portal',status);a.href='./index.html';return;}
- status.textContent='A carregar os dados do Ian…';
- unsubscribe=onSnapshot(doc(db,'users',IAN,'progresso','portal'),{includeMetadataChanges:true},snap=>{
- if(!snap.exists()){report.replaceChildren();report.hidden=true;print.hidden=true;status.textContent=snap.metadata.fromCache?'A aguardar confirmação do servidor…':'Ainda não existe progresso guardado para o Ian.';return;}
- try{render(snap.data());status.textContent=snap.metadata.fromCache?'Dados locais em cache; a aguardar confirmação do servidor.':'Dados confirmados pelo servidor. Consulta apenas de leitura.';}catch(error){report.replaceChildren();report.hidden=true;print.hidden=true;status.textContent='Não foi possível interpretar os dados: '+error.message;}
- },error=>{report.replaceChildren();report.hidden=true;print.hidden=true;status.textContent=error.code==='permission-denied'?'Acesso negado. Confirma a conta e as regras publicadas no Firestore.':'Não foi possível carregar os dados. Verifica a ligação e recarrega a página.';});
-},()=>{report.replaceChildren();report.hidden=true;print.hidden=true;status.textContent='Não foi possível verificar a sessão. Recarrega a página.';});
+ if(user.uid!==SUPERVISOR){$('status').textContent='Área reservada à conta de acompanhamento.';return;}
+ $('audit').hidden=false;cursor=null;load(true);
+ unsub=onSnapshot(doc(db,'users',IAN,'progresso','portal'),{includeMetadataChanges:true},snap=>{
+  if(!snap.exists()){$('report').replaceChildren();$('report').hidden=true;$('print').hidden=true;$('status').textContent='Sem progresso disponível.';return;}
+  try{render(snap.data());$('status').textContent=snap.metadata.fromCache?'Dados em cache; aguarda confirmação do servidor.':'Progresso confirmado pelo servidor. Apenas leitura.';}catch(error){$('report').replaceChildren();$('print').hidden=true;$('status').textContent=error.message;}
+ },error=>{$('report').replaceChildren();$('print').hidden=true;$('status').textContent='Não foi possível ler o progresso: '+error.message;});
+});
