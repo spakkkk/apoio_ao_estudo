@@ -1,16 +1,7 @@
 const ROOT=new URL('../',import.meta.url);
-export function enhanceSupervisor(){
-let queued=false;
-function render(){
- const nav=document.querySelector('.sidebar .nav');
- if(nav&&!nav.querySelector('[data-supervisor-link]')){
-  for(const [label,hash] of [['Resumo do Ian','report'],['Atividade do Ian','audit']]){const a=document.createElement('a');a.dataset.supervisorLink=hash;a.href=new URL('acompanhamento.html#'+hash,ROOT).href;a.textContent=label;nav.append(a);}
- }
- for(const n of document.querySelectorAll('.profile-label')){if(!n.dataset.supervisor){n.dataset.supervisor='1';n.replaceChildren(document.createTextNode('A minha conta'));}}
- for(const n of document.querySelectorAll('.avatar'))if(n.textContent==='I')n.textContent='A';
- const greeting=document.querySelector('.welcome p');if(greeting&&greeting.textContent.startsWith('Olá, Ian.'))greeting.textContent=greeting.textContent.replace('Olá, Ian.','Olá.');
- const profile=document.querySelector('.topbar .profile');if(profile&&!profile.querySelector('[data-own-progress]')){const p=document.createElement('span');p.dataset.ownProgress='1';p.style.cssText='font-size:11px;color:#627464';p.textContent='Progresso próprio';profile.append(p);}
-}
-function schedule(){if(queued)return;queued=true;requestAnimationFrame(()=>{queued=false;render();});}
-new MutationObserver(schedule).observe(document.body,{childList:true,subtree:true});schedule();
-}
+function icon(kind){const n='http://www.w3.org/2000/svg',s=document.createElementNS(n,'svg'),p=document.createElementNS(n,'path');for(const [k,v] of Object.entries({viewBox:'0 0 24 24',width:'19',height:'19',fill:'none',stroke:'currentColor','stroke-width':'1.7','stroke-linecap':'round','stroke-linejoin':'round','aria-hidden':'true',focusable:'false'}))s.setAttribute(k,v);s.style.cssText='flex:0 0 19px;vertical-align:middle;margin-right:9px';p.setAttribute('d',kind==='report'?'M4 4h16v16H4z M8 15v2 M12 11v6 M16 7v10':'M3 12h4l3-7 4 14 3-7h4');s.append(p);return s;}
+export function enhanceSupervisor(){let queued=false;
+function render(){const nav=document.querySelector('.sidebar .nav');if(nav&&!nav.querySelector('[data-supervisor-link]')){for(const [label,hash] of [['Resumo do Ian','report'],['Atividade do Ian','audit']]){const a=document.createElement('a');a.dataset.supervisorLink=hash;a.href=new URL('acompanhamento.html#'+hash,ROOT).href;a.append(icon(hash),document.createTextNode(label));nav.append(a);}}
+for(const n of document.querySelectorAll('.profile-label'))if(!n.dataset.supervisor){n.dataset.supervisor='1';n.replaceChildren(document.createTextNode('A minha conta'));}
+for(const n of document.querySelectorAll('.avatar'))if(n.textContent==='I')n.textContent='A';const greeting=document.querySelector('.welcome p');if(greeting&&greeting.textContent.startsWith('Olá, Ian.'))greeting.textContent=greeting.textContent.replace('Olá, Ian.','Olá.');const profile=document.querySelector('.topbar .profile');if(profile&&!profile.querySelector('[data-own-progress]')){const p=document.createElement('span');p.dataset.ownProgress='1';p.style.cssText='font-size:11px;color:#627464';p.textContent='Progresso próprio';profile.append(p);}}
+function schedule(){if(queued)return;queued=true;requestAnimationFrame(()=>{queued=false;render();});}new MutationObserver(schedule).observe(document.body,{childList:true,subtree:true});schedule();}
