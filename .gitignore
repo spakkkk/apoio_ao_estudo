@@ -19,6 +19,7 @@ application_default_credentials.json
 *.key
 *.p12
 *.pfx
+SHA256.json
 
 # Sistema operativo
 .DS_Store
