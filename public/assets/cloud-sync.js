@@ -1,18 +1,19 @@
 import {enhanceDashboard} from "./dashboard.js";
 import {createAccountBar,enhancePortal} from "./portal-ui.js";
 import {createJournal} from "./activity-journal.js";
+import {enhanceSupervisor} from "./supervisor-ui.js?v=20261118a";
 import {initializeApp,getApps,getApp} from "https://www.gstatic.com/firebasejs/13.3.0/firebase-app.js";
 import {getAuth,onAuthStateChanged,signOut} from "https://www.gstatic.com/firebasejs/13.3.0/firebase-auth.js";
 import {getFirestore,doc,getDocFromServer,runTransaction,serverTimestamp} from "https://www.gstatic.com/firebasejs/13.3.0/firebase-firestore.js";
 const config={apiKey:'AIzaSyC7qmpQmNAA1Y5WDmtKvamS1k4k7qcELNI',authDomain:'apoio-ao-estudo.firebaseapp.com',projectId:'apoio-ao-estudo',storageBucket:'apoio-ao-estudo.firebasestorage.app',messagingSenderId:'740789054680',appId:'1:740789054680:web:c068304d0b8bbcf96a3bad'};
 const root=new URL("../",import.meta.url),blank=()=>({read:[],plan:[],history:[],drafts:{}});
 function validate(s){if(!s||!Array.isArray(s.read)||!Array.isArray(s.plan)||!Array.isArray(s.history)||!s.drafts||typeof s.drafts!=="object"||Array.isArray(s.drafts))throw Error("Formato de progresso inválido.");return s;}
-function download(text){const u=URL.createObjectURL(new Blob([text],{type:"application/json"})),a=document.createElement("a");a.href=u;a.download="progresso-ian-backup.json";a.click();setTimeout(()=>URL.revokeObjectURL(u),2000);}
+function download(text){const u=URL.createObjectURL(new Blob([text],{type:"application/json"})),a=document.createElement("a");a.href=u;a.download="progresso-conta-backup.json";a.click();setTimeout(()=>URL.revokeObjectURL(u),2000);}
 export async function start(){
  const app=getApps().length?getApp():initializeApp(config),auth=getAuth(app),db=getFirestore(app);
  const user=await new Promise((resolve,reject)=>{const unsub=onAuthStateChanged(auth,u=>{unsub();resolve(u);},reject);});
  if(!user){location.replace(new URL("login.html",root));await new Promise(()=>{});}
- if(user.uid==="6X1jNaIZgMNO6CgkMXndkAHiB1m1"){location.replace(new URL("acompanhamento.html",root));await new Promise(()=>{});}
+ const supervisor=user.uid==="6X1jNaIZgMNO6CgkMXndkAHiB1m1";
  const key="ian-study-portal-v1:"+user.uid,pendingKey=key+":pending",reference=doc(db,"users",user.uid,"progresso","portal");
  let revision=0,pending=null,running=null,timeout,conflict=false,journal=null;
  const {bar,message,button}=createAccountBar();
@@ -35,11 +36,13 @@ export async function start(){
     if(batch.length)tx.set(doc(db,'users',user.uid,'activity',String(expected+1)),audit);
    });
    revision=expected+1;journal?.acknowledge(batch);
-   if(pending===payload){pending=null;localStorage.removeItem(pendingKey);message("Guardado na conta do Ian.");}else localStorage.setItem(pendingKey,JSON.stringify({revision,state:pending}));
+   if(pending===payload){pending=null;localStorage.removeItem(pendingKey);message("Guardado na tua conta.");}else localStorage.setItem(pendingKey,JSON.stringify({revision,state:pending}));
   }catch(e){if(e.isConflict)conflict=true;message(conflict?"Conflito: exporta uma cópia e recarrega.":"Não guardado na conta. Cópia local disponível; tenta novamente.");throw e;}finally{running=null;}})();
   await running;if(pending)return flush();
  }
- message("A carregar o progresso da conta…");const snapshot=await getDocFromServer(reference);revision=snapshot.exists()?snapshot.data().revision||0:0;
+ message("A carregar o progresso da conta…");let snapshot;
+ try{snapshot=await getDocFromServer(reference);}catch(e){if(supervisor&&e.code==='permission-denied')throw Error("A conta de acompanhamento ainda não tem permissão para ler o seu progresso próprio no Firestore. As regras precisam de revisão; não foram usados os dados do Ian como alternativa.");throw e;}
+ revision=snapshot.exists()?snapshot.data().revision||0:0;
  const remoteState=snapshot.exists()?validate(JSON.parse(snapshot.data().state)):blank();
  let state=remoteState;const saved=JSON.parse(localStorage.getItem(pendingKey)||"null");
  journal=createJournal(key,remoteState);
@@ -49,8 +52,9 @@ export async function start(){
   localStorage.removeItem(pendingKey);journal.clear();
  }}
  const legacy=localStorage.getItem("ian-study-portal-v1"),marker=key+":legacy-checked";
- if(!snapshot.exists()&&!saved&&legacy&&!localStorage.getItem(marker)){const old=validate(JSON.parse(legacy));if(old.read.length||old.plan.length||old.history.length||Object.keys(old.drafts).length){if(confirm("Importar o estudo antigo deste navegador para a conta do Ian?")){state=old;pending=JSON.stringify(old);}}localStorage.setItem(marker,"1");}
- // Establish the current baseline: existing progress is not retroactive activity.
+ if(!supervisor&&!snapshot.exists()&&!saved&&legacy&&!localStorage.getItem(marker)){const old=validate(JSON.parse(legacy));if(old.read.length||old.plan.length||old.history.length||Object.keys(old.drafts).length){if(confirm("Importar o estudo antigo deste navegador para a tua conta?")){state=old;pending=JSON.stringify(old);}}localStorage.setItem(marker,"1");}
+ // Do not import the student's unscoped legacy data into the supervisor's account.
+ if(supervisor)localStorage.setItem(marker,"1");
  journal=createJournal(key,state);journal.visit();
  localStorage.setItem(key,JSON.stringify(state));queue(state);await flush();
  window.addEventListener("online",()=>flush().catch(()=>{}));
@@ -58,5 +62,5 @@ export async function start(){
  window.addEventListener("storage",e=>{if(e.key===key){conflict=true;message("Outra janela alterou o estudo. Exporta e recarrega antes de continuar.");}});
  onAuthStateChanged(auth,u=>{if(!u||u.uid!==user.uid)location.replace(new URL("login.html",root));});
  document.addEventListener("click",e=>{const a=e.target.closest("a[href]");if(!a||e.defaultPrevented||e.ctrlKey||e.metaKey||e.shiftKey||e.altKey||a.target==="_blank"||a.hasAttribute("download"))return;const dest=new URL(a.href,location.href);if(dest.origin!==location.origin||dest.pathname===location.pathname)return;if(pending||running){e.preventDefault();flush().then(()=>location.assign(dest.href)).catch(err=>alert(err.message));}},true);
- const api={key,queue,flush};window.IanCloud=api;enhancePortal(api,bar);enhanceDashboard(api);return api;
+ const api={key,queue,flush};window.IanCloud=api;enhancePortal(api,bar);enhanceDashboard(api);if(supervisor)enhanceSupervisor();return api;
 }
