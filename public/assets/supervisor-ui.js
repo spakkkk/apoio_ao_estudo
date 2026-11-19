@@ -1,3 +1,4 @@
+import './rebrand.js?v=20261119a';
 import './quiz-status.js?v=20261119a';
 const ROOT=new URL('../',import.meta.url);
 function icon(kind){const n='http://www.w3.org/2000/svg',s=document.createElementNS(n,'svg'),p=document.createElementNS(n,'path');for(const [k,v] of Object.entries({viewBox:'0 0 24 24',width:'20',height:'20',fill:'none',stroke:'currentColor','stroke-width':'1.7','stroke-linecap':'round','stroke-linejoin':'round','aria-hidden':'true',focusable:'false'}))s.setAttribute(k,v);s.style.cssText='flex:0 0 20px;vertical-align:middle;margin:0';p.setAttribute('d',kind==='report'?'M4 4h16v16H4z M8 15v2 M12 11v6 M16 7v10':'M3 12h4l3-7 4 14 3-7h4');s.append(p);return s;}
