@@ -1,7 +1,7 @@
 {
   "hosting": {
     "public": ".portal-build/public",
-    "predeploy": ["node tools/build-portal.mjs"],
+    "predeploy": ["node tools/test-completion.mjs", "node tools/build-portal.mjs", "node tools/apply-completion.mjs"],
     "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
     "headers": [
       {"source": "**/*.@(html|js|css)", "headers": [{"key": "Cache-Control", "value": "no-cache, max-age=0, must-revalidate"}]},

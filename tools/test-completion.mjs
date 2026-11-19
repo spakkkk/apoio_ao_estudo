@@ -1,0 +1,13 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+const sourceCode=fs.readFileSync(new URL('../public/assets/completion-progress.js',import.meta.url),'utf8');
+const {completionSummary,completionLabels}=await import('data:text/javascript;base64,'+Buffer.from(sourceCode).toString('base64'));
+const data={subjects:[{id:'geo',events:[{id:'exam'}]},{id:'fi',events:[{id:'exam'}]}]};
+const state={topicChecks:{'assessment:geo/exam':true,'assessment:fi/exam':true}};
+const source=id=>id==='geo'?{read:0,total:16,quizzes:0,quizTotal:3}:id==='fi'?{read:0,total:12,quizzes:8,quizTotal:8}:{read:0,total:5,quizzes:0,quizTotal:2};
+const snapshot=JSON.stringify(state),summary=()=>completionSummary(data,state,source);
+let s=summary();assert.equal(s.sections,0);assert.equal(s.sectionTotal,28);assert.equal(s.quizzes,8);assert.equal(s.quizTotal,11);assert.equal(s.remainingSections,0);assert.equal(s.remainingQuizzes,0);assert.equal(s.allClosed,true);assert.equal(completionLabels(s)[1][0],'8/11');assert.equal(completionLabels(s)[0][1],'Sem secções pendentes');assert.equal(JSON.stringify(state),snapshot);
+delete state.topicChecks['assessment:geo/exam'];s=summary();assert.equal(s.remainingSections,16);assert.equal(s.remainingQuizzes,3);assert.equal(s.allClosed,false);
+state.topicChecks['assessment:geo/exam']=true;data.subjects.push({id:'new',events:[{id:'exam'}]});s=summary();assert.equal(s.remainingSections,5);assert.equal(s.remainingQuizzes,2);assert.equal(s.allClosed,false);
+assert.match(completionLabels(null)[0][1],/carregar/);assert.equal(completionLabels(completionSummary({subjects:[]},{},source))[0][0],'Sem matérias');
+console.log('Completion regression tests passed: close, reopen, new assessment, history preserved, empty/loading states.');

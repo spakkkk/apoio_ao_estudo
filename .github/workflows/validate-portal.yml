@@ -11,5 +11,7 @@ jobs:
         with:
           node-version: '22'
       - run: node --check tools/build-portal.mjs
+      - run: node tools/test-completion.mjs
       - run: node tools/build-portal.mjs --check
       - run: node tools/build-portal.mjs
+      - run: node tools/apply-completion.mjs
