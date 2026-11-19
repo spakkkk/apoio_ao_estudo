@@ -48,3 +48,6 @@ validar-publicacao.cjs
 ficheiros-estrutura/
 repor-estrutura-filosofia.cjs
 REPOR-ESTRUTURA-FILOSOFIA.cmd
+
+# Publicacao gerada automaticamente
+.portal-build/
