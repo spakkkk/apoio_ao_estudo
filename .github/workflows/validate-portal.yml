@@ -4,13 +4,17 @@ permissions:
   contents: read
 jobs:
   validate:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
       - run: node --check tools/build-portal.mjs
+      - run: node tools/test-apply-completion.mjs
       - run: node tools/test-completion.mjs
       - run: node tools/build-portal.mjs --check
       - run: node tools/build-portal.mjs
