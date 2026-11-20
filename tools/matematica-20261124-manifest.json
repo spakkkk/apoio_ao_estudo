@@ -1,0 +1,27 @@
+{
+  "public/disciplinas/matematica-a/teste-2026-11-24/index.html": {
+    "sha256": "fe5130e5f2cd4403e2ac59fe521f10561f0d18d8a990616943f11a657670e0a5",
+    "bytes": 39531,
+    "binary": false
+  },
+  "public/disciplinas/matematica-a/teste-2026-11-24/matematica-app.js": {
+    "sha256": "27f534537f73cbd6f8d209f60b4fcb348b58536c671d75c2de50b20c61559383",
+    "bytes": 8249,
+    "binary": false
+  },
+  "public/disciplinas/matematica-a/teste-2026-11-24/matematica-data.js": {
+    "sha256": "d5a59732123a58704dc9d635ee81f49401bc4da14f69ca51519347818847e64b",
+    "bytes": 24769,
+    "binary": false
+  },
+  "public/disciplinas/matematica-a/teste-2026-11-24/Matematica_A_Guia_Teste_24-11-2026.pdf": {
+    "sha256": "f17fc40a5a50cdbc9f85ec431a7aa8deb508d7c9294d50014600a81dd0119926",
+    "bytes": 87429,
+    "binary": true
+  },
+  "public/disciplinas/matematica-a/teste-2026-11-24/Matematica_A_10_Quizzes_Imprimir.pdf": {
+    "sha256": "a6a6d9893c69e60ecb45a04dd089914fccf74e4cca13c9e7505c780d99b792da",
+    "bytes": 73860,
+    "binary": true
+  }
+}
