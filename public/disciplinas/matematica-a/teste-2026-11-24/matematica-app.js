@@ -1,3 +1,4 @@
+import './matematica-portal.js?v=20261120a';
 import {start} from '../../../assets/cloud-sync.js';
 try{
 const api=await start();const DATA=window.MATEMATICA_DATA.quizzes;window.STUDY_QUIZZES=DATA;const KEY=api.key,SCOPE='mathematics20261124';const account=JSON.parse(localStorage.getItem(KEY)||'{}');let state=account[SCOPE]||{read:[],plan:[],history:[],drafts:{}};if(!Array.isArray(state.read)||!Array.isArray(state.history)||!state.drafts||typeof state.drafts!=='object')throw Error('O progresso de Matemática tem um formato inesperado. Exporta uma cópia antes de continuar.');let active=0,graded=false,storageOK=true;const requestedQuiz=new URLSearchParams(location.hash.slice(1)).get('quiz');

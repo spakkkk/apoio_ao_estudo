@@ -5,8 +5,8 @@
     "binary": false
   },
   "public/disciplinas/matematica-a/teste-2026-11-24/matematica-app.js": {
-    "sha256": "27f534537f73cbd6f8d209f60b4fcb348b58536c671d75c2de50b20c61559383",
-    "bytes": 8249,
+    "sha256": "2ea0c05f475807cbff4df99f87dabc1ef5cdecaaa51075b2b0879994c147351e",
+    "bytes": 8294,
     "binary": false
   },
   "public/disciplinas/matematica-a/teste-2026-11-24/matematica-data.js": {
@@ -23,5 +23,15 @@
     "sha256": "a6a6d9893c69e60ecb45a04dd089914fccf74e4cca13c9e7505c780d99b792da",
     "bytes": 73860,
     "binary": true
+  },
+  "public/disciplinas/matematica-a/teste-2026-11-24/matematica-portal.js": {
+    "sha256": "0823f232b8edee38407069fc37f14e967ff69e7a854085558134888c5459c35a",
+    "bytes": 8825,
+    "binary": false
+  },
+  "public/disciplinas/matematica-a/teste-2026-11-24/matematica-portal.css": {
+    "sha256": "d754953d9ca912ba72d8cca039a262c05ee69789530c312ce4935eb241c7b175",
+    "bytes": 2956,
+    "binary": false
   }
 }
