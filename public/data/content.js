@@ -35,8 +35,99 @@ window.PORTAL_DATA = {
       "short": "EA",
       "color": "#f6dfae",
       "description": "Compreender decisões e recursos.",
-      "updated": null,
-      "events": []
+      "updated": "2026-11-26",
+      "events": [
+        {
+          "id": "prova-comum-2026-11-26",
+          "type": "Prova comum",
+          "date": "2026-11-26",
+          "time": "10:20–11:10",
+          "minutes": 50,
+          "title": "Atividade económica, necessidades, consumo e produção",
+          "path": "disciplinas/economia-a/prova-comum-2026-11-26/index.html",
+          "pdfPath": "disciplinas/economia-a/prova-comum-2026-11-26/guia-economia.pdf",
+          "progressKey": "economics20261126",
+          "dataGlobal": "ECONOMIA_DATA",
+          "lessonIds": [
+            "ea26-s01",
+            "ea26-s02",
+            "ea26-s03",
+            "ea26-s04",
+            "ea26-s05",
+            "ea26-s06",
+            "ea26-s07",
+            "ea26-s08",
+            "ea26-s09",
+            "ea26-s10"
+          ],
+          "quizIds": [
+            "ea26-quiz-01",
+            "ea26-quiz-02",
+            "ea26-quiz-03",
+            "ea26-quiz-04",
+            "ea26-quiz-05",
+            "ea26-quiz-06",
+            "ea26-quiz-07",
+            "ea26-quiz-08",
+            "ea26-quiz-09",
+            "ea26-quiz-10"
+          ],
+          "sectionCount": 10,
+          "quizCount": 10,
+          "quizMeta": [
+            {
+              "id": "ea26-quiz-01",
+              "title": "Economia e sociedade",
+              "questionCount": 3
+            },
+            {
+              "id": "ea26-quiz-02",
+              "title": "Escassez e escolhas",
+              "questionCount": 3
+            },
+            {
+              "id": "ea26-quiz-03",
+              "title": "Agentes e rendimentos",
+              "questionCount": 3
+            },
+            {
+              "id": "ea26-quiz-04",
+              "title": "Necessidades",
+              "questionCount": 3
+            },
+            {
+              "id": "ea26-quiz-05",
+              "title": "Tipos de consumo",
+              "questionCount": 3
+            },
+            {
+              "id": "ea26-quiz-06",
+              "title": "Fatores e orçamento",
+              "questionCount": 3
+            },
+            {
+              "id": "ea26-quiz-07",
+              "title": "Lei de Engel",
+              "questionCount": 3
+            },
+            {
+              "id": "ea26-quiz-08",
+              "title": "Sociedade de consumo",
+              "questionCount": 3
+            },
+            {
+              "id": "ea26-quiz-09",
+              "title": "Bens económicos",
+              "questionCount": 3
+            },
+            {
+              "id": "ea26-quiz-10",
+              "title": "Produção e setores",
+              "questionCount": 3
+            }
+          ]
+        }
+      ]
     },
     {
       "id": "portugues",
