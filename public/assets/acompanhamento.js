@@ -10,7 +10,7 @@ function plain(x){return new DOMParser().parseFromString(String(x??''),'text/htm
 function date(x){if(x===undefined||x===null||x==='')return 'Data indisponível';const d=x?.toDate?x.toDate():new Date(x);return Number.isFinite(d.getTime())?d.toLocaleString('pt-PT'):'Data indisponível';}
 const data=subject=>subject==='economia-a'?window.ECONOMIA_DATA:subject==='filosofia'?window.FILOSOFIA_DATA:subject==='geografia'||subject==='geografia-a'?window.PORTAL_DATA:null;
 const subjectName=s=>s==='geografia'?'Geografia A':window.PORTAL_DATA?.subjects?.find(x=>x.id===s)?.name||'Portal';
-const quiz=(subject,id)=>data(subject)?.quizzes?.find(q=>q.id===id);
+const quiz=(subject,id)=>data(subject)?.quizzes?.find(q=>q.id===id)||(subject==='economia-a'?data(subject)?.archivedQuizzes?.find(q=>q.id===id):undefined);
 function label(subject,id){
  if(String(id).startsWith('assessment:')){const [sid,eid]=id.slice(11).split('/');const s=window.PORTAL_DATA?.subjects?.find(s=>s.id===sid),e=s?.events?.find(e=>e.id===eid);return (s?.name||sid)+' — '+(e?.title||eid);}
  const d=data(subject),l=d?.lessons?.find(l=>l.id===id);if(l)return plain(l.title);

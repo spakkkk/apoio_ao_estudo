@@ -1,7 +1,7 @@
 window.PORTAL_DATA = {
   "title": "Portal de Apoio ao Estudo",
   "student": "Ian",
-  "updated": "2026-11-16",
+  "updated": "2026-11-20",
   "subjects": [
     {
       "id": "geografia-a",
@@ -26,8 +26,110 @@ window.PORTAL_DATA = {
       "short": "MA",
       "color": "#d9d0fa",
       "description": "Raciocínio, prática e resolução.",
-      "updated": null,
-      "events": []
+      "updated": "2026-11-20",
+      "events": [
+        {
+          "id": "teste-2026-11-24",
+          "type": "Teste",
+          "date": "2026-11-24",
+          "time": "08:20",
+          "title": "Salários, IRS e juros",
+          "path": "disciplinas/matematica-a/teste-2026-11-24/index.html",
+          "pdfPath": "disciplinas/matematica-a/teste-2026-11-24/Matematica_A_Guia_Teste_24-11-2026.pdf",
+          "progressKey": "mathematics20261124",
+          "dataGlobal": "MATEMATICA_DATA",
+          "sectionCount": 22,
+          "quizCount": 10,
+          "lessonIds": [
+            "ma261124-sec-01",
+            "ma261124-sec-02",
+            "ma261124-sec-03",
+            "ma261124-sec-04",
+            "ma261124-sec-05",
+            "ma261124-sec-06",
+            "ma261124-sec-07",
+            "ma261124-sec-08",
+            "ma261124-sec-09",
+            "ma261124-sec-10",
+            "ma261124-sec-11",
+            "ma261124-sec-12",
+            "ma261124-sec-13",
+            "ma261124-sec-14",
+            "ma261124-sec-15",
+            "ma261124-sec-16",
+            "ma261124-sec-17",
+            "ma261124-sec-18",
+            "ma261124-sec-19",
+            "ma261124-sec-20",
+            "ma261124-sec-21",
+            "ma261124-sec-22"
+          ],
+          "quizIds": [
+            "ma261124-quiz-01",
+            "ma261124-quiz-02",
+            "ma261124-quiz-03",
+            "ma261124-quiz-04",
+            "ma261124-quiz-05",
+            "ma261124-quiz-06",
+            "ma261124-quiz-07",
+            "ma261124-quiz-08",
+            "ma261124-quiz-09",
+            "ma261124-quiz-10"
+          ],
+          "quizMeta": [
+            {
+              "id": "ma261124-quiz-01",
+              "title": "01 · Perceber o recibo",
+              "questionCount": 8
+            },
+            {
+              "id": "ma261124-quiz-02",
+              "title": "02 · Sara e Soraia: fazer as contas",
+              "questionCount": 8
+            },
+            {
+              "id": "ma261124-quiz-03",
+              "title": "03 · Ler tabelas de retenção",
+              "questionCount": 8
+            },
+            {
+              "id": "ma261124-quiz-04",
+              "title": "04 · Inverter o recibo e calcular o valor-hora",
+              "questionCount": 8
+            },
+            {
+              "id": "ma261124-quiz-05",
+              "title": "05 · IRS anual: ordenar as etapas",
+              "questionCount": 8
+            },
+            {
+              "id": "ma261124-quiz-06",
+              "title": "06 · Juro simples: dominar o modelo",
+              "questionCount": 8
+            },
+            {
+              "id": "ma261124-quiz-07",
+              "title": "07 · Juro composto: juros sobre juros",
+              "questionCount": 8
+            },
+            {
+              "id": "ma261124-quiz-08",
+              "title": "08 · Capitalizações semestrais e trimestrais",
+              "questionCount": 8
+            },
+            {
+              "id": "ma261124-quiz-09",
+              "title": "09 · Descobrir o capital e a taxa",
+              "questionCount": 8
+            },
+            {
+              "id": "ma261124-quiz-10",
+              "title": "10 · Simulado misto: pronto para o teste?",
+              "questionCount": 8
+            }
+          ]
+        }
+      ]
     },
     {
       "id": "economia-a",
@@ -61,69 +163,69 @@ window.PORTAL_DATA = {
             "ea26-s10"
           ],
           "quizIds": [
-            "ea26-quiz-01",
-            "ea26-quiz-02",
-            "ea26-quiz-03",
-            "ea26-quiz-04",
-            "ea26-quiz-05",
-            "ea26-quiz-06",
-            "ea26-quiz-07",
-            "ea26-quiz-08",
-            "ea26-quiz-09",
-            "ea26-quiz-10"
+            "ea26-quiz-01-v2",
+            "ea26-quiz-02-v2",
+            "ea26-quiz-03-v2",
+            "ea26-quiz-04-v2",
+            "ea26-quiz-05-v2",
+            "ea26-quiz-06-v2",
+            "ea26-quiz-07-v2",
+            "ea26-quiz-08-v2",
+            "ea26-quiz-09-v2",
+            "ea26-quiz-10-v2"
           ],
           "sectionCount": 10,
           "quizCount": 10,
           "quizMeta": [
             {
-              "id": "ea26-quiz-01",
+              "id": "ea26-quiz-01-v2",
               "title": "Economia e sociedade",
-              "questionCount": 3
+              "questionCount": 10
             },
             {
-              "id": "ea26-quiz-02",
-              "title": "Escassez e escolhas",
-              "questionCount": 3
+              "id": "ea26-quiz-02-v2",
+              "title": "Objeto e atividades",
+              "questionCount": 10
             },
             {
-              "id": "ea26-quiz-03",
-              "title": "Agentes e rendimentos",
-              "questionCount": 3
+              "id": "ea26-quiz-03-v2",
+              "title": "Escolha e escassez",
+              "questionCount": 10
             },
             {
-              "id": "ea26-quiz-04",
-              "title": "Necessidades",
-              "questionCount": 3
+              "id": "ea26-quiz-04-v2",
+              "title": "Agentes económicos",
+              "questionCount": 10
             },
             {
-              "id": "ea26-quiz-05",
-              "title": "Tipos de consumo",
-              "questionCount": 3
+              "id": "ea26-quiz-05-v2",
+              "title": "Necessidades e consumo",
+              "questionCount": 10
             },
             {
-              "id": "ea26-quiz-06",
+              "id": "ea26-quiz-06-v2",
               "title": "Fatores e orçamento",
-              "questionCount": 3
+              "questionCount": 10
             },
             {
-              "id": "ea26-quiz-07",
+              "id": "ea26-quiz-07-v2",
               "title": "Lei de Engel",
-              "questionCount": 3
+              "questionCount": 10
             },
             {
-              "id": "ea26-quiz-08",
+              "id": "ea26-quiz-08-v2",
               "title": "Sociedade de consumo",
-              "questionCount": 3
+              "questionCount": 10
             },
             {
-              "id": "ea26-quiz-09",
+              "id": "ea26-quiz-09-v2",
               "title": "Bens económicos",
-              "questionCount": 3
+              "questionCount": 10
             },
             {
-              "id": "ea26-quiz-10",
+              "id": "ea26-quiz-10-v2",
               "title": "Produção e setores",
-              "questionCount": 3
+              "questionCount": 10
             }
           ]
         }
@@ -1259,6 +1361,3 @@ window.PORTAL_DATA = {
     }
   ]
 };
-
-// pa-est: mathematics assessment registration 20261124
-(()=>{const d=window.PORTAL_DATA,s=d.subjects.find(s=>s.id==='matematica-a');if(!s)throw Error('Missing Mathematics A subject');const e={"id":"teste-2026-11-24","type":"Teste","date":"2026-11-24","time":"08:20","title":"Salários, IRS e juros","path":"disciplinas/matematica-a/teste-2026-11-24/index.html","pdfPath":"disciplinas/matematica-a/teste-2026-11-24/Matematica_A_Guia_Teste_24-11-2026.pdf","progressKey":"mathematics20261124","dataGlobal":"MATEMATICA_DATA","sectionCount":22,"quizCount":10,"lessonIds":["ma261124-sec-01","ma261124-sec-02","ma261124-sec-03","ma261124-sec-04","ma261124-sec-05","ma261124-sec-06","ma261124-sec-07","ma261124-sec-08","ma261124-sec-09","ma261124-sec-10","ma261124-sec-11","ma261124-sec-12","ma261124-sec-13","ma261124-sec-14","ma261124-sec-15","ma261124-sec-16","ma261124-sec-17","ma261124-sec-18","ma261124-sec-19","ma261124-sec-20","ma261124-sec-21","ma261124-sec-22"],"quizIds":["ma261124-quiz-01","ma261124-quiz-02","ma261124-quiz-03","ma261124-quiz-04","ma261124-quiz-05","ma261124-quiz-06","ma261124-quiz-07","ma261124-quiz-08","ma261124-quiz-09","ma261124-quiz-10"],"quizMeta":[{"id":"ma261124-quiz-01","title":"01 · Perceber o recibo","questionCount":8},{"id":"ma261124-quiz-02","title":"02 · Sara e Soraia: fazer as contas","questionCount":8},{"id":"ma261124-quiz-03","title":"03 · Ler tabelas de retenção","questionCount":8},{"id":"ma261124-quiz-04","title":"04 · Inverter o recibo e calcular o valor-hora","questionCount":8},{"id":"ma261124-quiz-05","title":"05 · IRS anual: ordenar as etapas","questionCount":8},{"id":"ma261124-quiz-06","title":"06 · Juro simples: dominar o modelo","questionCount":8},{"id":"ma261124-quiz-07","title":"07 · Juro composto: juros sobre juros","questionCount":8},{"id":"ma261124-quiz-08","title":"08 · Capitalizações semestrais e trimestrais","questionCount":8},{"id":"ma261124-quiz-09","title":"09 · Descobrir o capital e a taxa","questionCount":8},{"id":"ma261124-quiz-10","title":"10 · Simulado misto: pronto para o teste?","questionCount":8}]};const i=s.events.findIndex(x=>x.id===e.id);if(i<0)s.events.push(e);else s.events[i]=e;s.updated='2026-11-20';if(!d.updated||d.updated<'2026-11-20')d.updated='2026-11-20';})();
