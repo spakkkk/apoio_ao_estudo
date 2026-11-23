@@ -51,3 +51,6 @@ REPOR-ESTRUTURA-FILOSOFIA.cmd
 
 # Publicacao gerada automaticamente
 .portal-build/
+LEIA-ME.txt
+PREPARAR-ECONOMIA.cmd
+preparar-economia.mjs
