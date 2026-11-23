@@ -8,7 +8,7 @@ const css=document.createElement('link');css.rel='stylesheet';css.href=new URL('
 function el(tag,text,parent){const n=document.createElement(tag);if(text!==undefined)n.textContent=String(text);parent?.append(n);return n;}
 function plain(x){return new DOMParser().parseFromString(String(x??''),'text/html').body.textContent||'';}
 function date(x){if(x===undefined||x===null||x==='')return 'Data indisponível';const d=x?.toDate?x.toDate():new Date(x);return Number.isFinite(d.getTime())?d.toLocaleString('pt-PT'):'Data indisponível';}
-const data=subject=>subject==='filosofia'?window.FILOSOFIA_DATA:subject==='geografia'||subject==='geografia-a'?window.PORTAL_DATA:null;
+const data=subject=>subject==='economia-a'?window.ECONOMIA_DATA:subject==='filosofia'?window.FILOSOFIA_DATA:subject==='geografia'||subject==='geografia-a'?window.PORTAL_DATA:null;
 const subjectName=s=>s==='geografia'?'Geografia A':window.PORTAL_DATA?.subjects?.find(x=>x.id===s)?.name||'Portal';
 const quiz=(subject,id)=>data(subject)?.quizzes?.find(q=>q.id===id);
 function label(subject,id){
@@ -18,19 +18,24 @@ function label(subject,id){
  if(subject==='geografia'||subject==='geografia-a'){const m=String(id).match(/^(.*)-(\d+)$/),l=m&&d?.lessons?.find(l=>l.id===m[1]);if(l)return plain(l.title)+' — '+plain(l.points?.[Number(m[2])]||id);}
  return ({ler:'Rever o guia',treinar:'Fazer um quiz',corrigir:'Voltar aos erros'})[id]||quiz(subject,id)?.title||String(id);
 }
-function answer(q,a){if(a===null||a===undefined||String(a).trim()==='')return 'Sem resposta';if(q?.t==='mc')return plain(q.o?.[Number(a)]??a);if(q?.t==='tf')return String(a)==='true'?'Verdadeiro':'Falso';return typeof a==='object'?JSON.stringify(a):String(a);}
+function answer(q,a){if(a===null||a===undefined||String(a).trim()==='')return 'Sem resposta';if(q?.type==='mc')return plain(q.options?.[Number(a)]??a);if(q?.t==='mc')return plain(q.o?.[Number(a)]??a);if(q?.t==='tf')return String(a)==='true'?'Verdadeiro':'Falso';return typeof a==='object'?JSON.stringify(a):String(a);}
 function result(parent,r,subject,captured=null){
  const d=el('details',undefined,parent);el('summary',plain(r.title||label(subject,r.quizId))+' · '+date(r.at)+' · '+r.score+'/'+r.max+' automáticos'+(r.practice?' · treino focado':''),d);
  const elapsed=Number(r.elapsed);if(Number.isFinite(elapsed))el('p','Tempo decorrido: '+Math.floor(elapsed/60)+' min '+Math.floor(elapsed%60)+' s (pode incluir pausas).',d);
  if(r.manual)el('p',r.manual+' pontos de respostas extensas previstos para avaliação humana. Não é uma nota final.',d);
  const qs=captured||quiz(subject,r.quizId)?.questions||[];el('p',captured?'Enunciados preservados no registo desta tentativa.':'Enunciados do catálogo atual; não são uma cópia histórica.',d);
+ if(subject==='economia-a'){
+  const arr=Array.isArray(r.answers)?r.answers:Object.entries(r.answers||{}).map(([id,answer])=>({id,answer}));
+  for(const [i,x] of arr.entries()){const q=qs.find(z=>z.id===x.id),part=el('div',undefined,d);part.className='question';el('h3','Pergunta '+(i+1),part);el('p',q?plain(q.question):'Enunciado indisponível.',part);el('p',(x.answer===null||x.answer===undefined||x.answer===''?'Sem resposta':x.correct===true?'Certa':x.correct===false?'Incorreta':'Resposta registada')+' · '+answer(q,x.answer),part);if(q){el('p','Solução: '+answer(q,q.answer),part);if(q.explanation)el('p',plain(q.explanation),part);}}
+  return d;
+ }
  const order=subject==='filosofia'?(r.order||Object.keys(r.answers||{})):qs.length?qs.map((_,i)=>String(i)):Object.keys(r.answers||{});
  order.forEach((key,i)=>{const q=subject==='filosofia'?qs.find(q=>q.id===key):qs[Number(key)],section=el('div',undefined,d);section.className='question';el('h3','Pergunta '+(i+1),section);el('p',q?plain(q.q):'Enunciado indisponível ('+key+')',section);el('p','Resposta: '+answer(q,r.answers?.[key]),section).className='answer';if(q?.t==='op'){if(q.m)el('p','Modelo: '+plain(q.m),section);if(q.pts){const ul=el('ul',undefined,section);q.pts.forEach(p=>el('li',plain(p),ul));}}else if(q){el('p','Solução: '+answer(q,q.a),section);if(q.e)el('p',plain(q.e),section);}});return d;
 }
 function items(parent,values,empty){if(!values.length){el('p',empty,parent);return;}const ul=el('ul',undefined,parent);values.forEach(v=>el('li',v,ul));}
 function fold(parent,key,title,status,cls){const d=el('details',undefined,parent);d.dataset.fold=key;d.className=cls;const summary=el('summary',undefined,d),copy=el('span',undefined,summary);copy.className='ac-fold-copy';el('span',title,copy).className='ac-fold-title';if(status)el('span',status,copy).className='ac-fold-status';const content=el('div',undefined,d);content.className='ac-fold-body';return {d,content};}
 function sourceFor(s,subject,event){if(event.progressKey)return s[event.progressKey]||{};if(subject.id==='geografia-a'&&event.id==='prova-comum-2026-11-13')return s;if(subject.id==='filosofia'&&event.id==='prova-comum-2026-11-19')return s.philosophy20261119||{};return null;}
-function progress(parent,state,subject,event){
+function progress(parent,state,subject,event,records){
  if(!state){el('p','Ainda não existe uma origem de progresso detalhado associada a esta avaliação.',parent);return;}
  const lessonIds=Array.isArray(event.lessonIds)?new Set(event.lessonIds):null,quizIds=Array.isArray(event.quizIds)?new Set(event.quizIds):null;
  const read=(state.read||[]).filter(id=>!lessonIds||lessonIds.has(id));
@@ -38,8 +43,12 @@ function progress(parent,state,subject,event){
  el('h3','Ideias assinaladas como lidas e compreendidas',parent);const checks=subject==='geografia'?state.topicChecks||{}:state.checks||{};
  items(parent,Object.entries(checks).filter(([k,v])=>v&&!k.startsWith('assessment:')&&(!lessonIds||[...lessonIds].some(id=>k===id||k.startsWith(id+':')||k.startsWith(id+'-')))).map(([k])=>label(subject,k)),'Nenhuma ideia assinalada.');
  if(subject==='geografia'){el('h3','Tarefas concluídas',parent);items(parent,(state.plan||[]).map(id=>label(subject,id)),'Nenhuma tarefa assinalada.');}
+ if(subject==='economia-a'){
+  el('h3','Estado dos quizzes de Economia A',parent);
+  const list=el('ul',undefined,parent);for(const id of event.quizIds||[]){const draft=state.drafts?.[id];const history=(state.history||[]).filter(r=>r.quizId===id&&!r.practice).sort((a,b)=>Date.parse(b.at)-Date.parse(a.at));const record=records?.[id],last=record?.last||history[0],best=record?.best||[...history].sort((a,b)=>b.score/b.max-a.score/a.max)[0];const n=Object.values(draft?.answers||{}).filter(x=>x!==null&&x!==undefined&&String(x).trim()!=='').length;const total=event.quizMeta?.find(x=>x.id===id)?.questionCount;const status=draft?(last?'Nova tentativa em curso':'Em curso')+' · '+n+(total?'/'+total:'')+' respondidas':last?'Concluído':'Por iniciar';const score=x=>x.score+'/'+x.max+' ('+date(x.at)+')';el('li',label(subject,id)+' — '+status+(last?' · última: '+score(last):'')+(best?' · melhor: '+score(best):''),list);}
+ }
  el('h3','Quizzes em curso',parent);const drafts=Object.entries(state.drafts||{}).filter(([id])=>!quizIds||quizIds.has(id));if(!drafts.length)el('p','Sem rascunhos.',parent);
- for(const [id,draft] of drafts){const details=el('details',undefined,parent);el('summary',label(subject,id)+' · início '+date(draft.start),details);el('p','Rascunho guardado; não indica presença online.',details);const q=quiz(subject,id);for(const [key,a] of Object.entries(draft.answers||{})){const question=subject==='filosofia'?q?.questions?.find(x=>x.id===key):q?.questions?.[Number(key)];el('p',(question?plain(question.q):'Pergunta '+key)+' — '+answer(question,a),details);}}
+ for(const [id,draft] of drafts){const details=el('details',undefined,parent);el('summary',label(subject,id)+' · início '+date(draft.start),details);el('p','Rascunho guardado; não indica presença online.',details);const q=quiz(subject,id);for(const [key,a] of Object.entries(draft.answers||{})){const question=(subject==='filosofia'||subject==='economia-a')?q?.questions?.find(x=>x.id===key):q?.questions?.[Number(key)];el('p',(question?plain(question.question??question.q):'Pergunta '+key)+' — '+answer(question,a),details);}}
  el('h3','Tentativas no progresso atual',parent);const h=(state.history||[]).filter(r=>!quizIds||quizIds.has(r.quizId));if(!h.length)el('p','Sem tentativas guardadas.',parent);[...h].sort((a,b)=>(Date.parse(b.at)||0)-(Date.parse(a.at)||0)).forEach(r=>result(parent,r,subject));
 }
 function render(raw){
@@ -59,7 +68,7 @@ function render(raw){
    const assessment=fold(box.content,key,title,completed?'Marcada como concluída':'Por concluir','ac-assessment');assessment.d.open=opened.has(key);assessment.d.classList.toggle('ac-is-complete',completed);
    if(e.date)el('p','Data da avaliação: '+e.date.split('-').reverse().join('/')+(e.time?' · '+e.time:''),assessment.content);
    if(completed)el('p','A conclusão foi assinalada no portal. O progresso e os resultados continuam disponíveis abaixo.',assessment.content);
-   progress(assessment.content,sourceFor(s,subject,e),subject.id==='geografia-a'?'geografia':subject.id,e);
+   progress(assessment.content,sourceFor(s,subject,e),subject.id==='geografia-a'?'geografia':subject.id,e,s.quizRecords?.[e.progressKey||'root']);
   }
  }
 }
@@ -69,7 +78,7 @@ function event(parent,e,savedAt){
  el('summary',date(e.at)+' · '+subjectName(e.subject)+' · '+(names[e.type]||e.type),d);
  if(savedAt)el('small','Gravação confirmada: '+date(savedAt),d);
  if(e.type==='completed')result(d,e.result,e.subject,e.catalogCaptured?e.questions:null);
- if(e.type==='answer'){const q=quiz(e.subject,e.key),question=e.questionSnapshot||(e.subject==='filosofia'?q?.questions?.find(x=>x.id===e.question):q?.questions?.[Number(e.question)]);el('p',question?plain(question.q):'Pergunta '+e.question,d);el('p','Resposta guardada: '+answer(question,e.value),d).className='answer';el('small',e.questionSnapshot?'Enunciado e opções preservados com a resposta.':'Enunciado e opções do catálogo atual.',d);}
+ if(e.type==='answer'){const q=quiz(e.subject,e.key),question=e.questionSnapshot||((e.subject==='filosofia'||e.subject==='economia-a')?q?.questions?.find(x=>x.id===e.question):q?.questions?.[Number(e.question)]);el('p',question?plain(question.question??question.q):'Pergunta '+e.question,d);el('p','Resposta guardada: '+answer(question,e.value),d).className='answer';el('small',e.questionSnapshot?'Enunciado e opções preservados com a resposta.':'Enunciado e opções do catálogo atual.',d);}
  if(e.page)el('p','Página: '+e.page,d);return d;
 }
 function renderActivity(){
@@ -101,3 +110,5 @@ onAuthStateChanged(auth,user=>{
  $('audit').hidden=false;watchActivity();const g=generation;
  unsub=onSnapshot(doc(db,'users',IAN,'progresso','portal'),{includeMetadataChanges:true},snap=>{if(g!==generation)return;if(!snap.exists()){$('report').replaceChildren();$('report').hidden=true;$('print').hidden=true;$('status').textContent='Sem progresso disponível.';return;}try{render(snap.data());$('status').textContent=snap.metadata.fromCache?'Dados em cache; aguarda confirmação do servidor.':'Progresso confirmado pelo servidor. Apenas leitura.';}catch(error){$('report').replaceChildren();$('print').hidden=true;$('status').textContent=error.message;}},error=>{if(g!==generation)return;$('report').replaceChildren();$('print').hidden=true;$('status').textContent='Não foi possível ler o progresso: '+error.message;});
 });
+
+// economia-ajuste-20261123

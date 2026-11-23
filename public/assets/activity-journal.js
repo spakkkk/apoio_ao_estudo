@@ -1,11 +1,11 @@
 const clone=value=>JSON.parse(JSON.stringify(value));
 const eq=(a,b)=>JSON.stringify(a??null)===JSON.stringify(b??null);
-function contexts(s){return [['geografia',s],['filosofia',s.philosophy20261119||{}]];}
+function contexts(s){return [['geografia',s],['filosofia',s.philosophy20261119||{}],['economia-a',s.economics20261126||{}]];}
 export function changes(before,after){
  const out=[];
  const emit=(type,subject,detail)=>out.push({type,subject,...detail});
  for(const [subject,b] of contexts(after)){
-  const a=subject==='geografia'?before:(before.philosophy20261119||{});
+  const a=subject==='geografia'?before:(subject==='economia-a'?before.economics20261126||{}:before.philosophy20261119||{});
   for(const field of ['read','plan']){
    const x=new Set(a[field]||[]),y=new Set(b[field]||[]);
    for(const id of new Set([...x,...y]))if(x.has(id)!==y.has(id))emit(field,subject,{key:String(id),value:y.has(id)});
@@ -14,11 +14,12 @@ export function changes(before,after){
    const x=a[field]||{},y=b[field]||{};
    for(const key of new Set([...Object.keys(x),...Object.keys(y)]))if(!!x[key]!==!!y[key])emit('check',subject,{key,value:!!y[key],label:subject==='geografia'?document.querySelector('[data-topic-id="'+CSS.escape(key)+'"]')?.getAttribute('aria-label')||'': ''});
   }
-  const oldIds=new Set((a.history||[]).map(r=>r.id));
+  const keyFor=r=>r.id??JSON.stringify([r.quizId||r.quiz,r.at||r.date,r.score,r.max]);
+  const oldIds=new Set((a.history||[]).map(keyFor));
   const completed=new Set();
-  for(const r of b.history||[])if(!oldIds.has(r.id)){
+  for(const r of b.history||[])if(!oldIds.has(keyFor(r))){
    completed.add(r.quizId);
-   const data=subject==='filosofia'?window.FILOSOFIA_DATA:window.PORTAL_DATA;
+   const data=subject==='economia-a'?window.ECONOMIA_DATA:subject==='filosofia'?window.FILOSOFIA_DATA:window.PORTAL_DATA;
    const q=data?.quizzes?.find(q=>q.id===r.quizId);
    emit('completed',subject,{key:r.quizId,result:clone(r),questions:q?clone(q.questions):[],catalogCaptured:!!q});
   }
@@ -28,7 +29,7 @@ export function changes(before,after){
    if(x[key]&&!y[key]&&!completed.has(key))emit('draftRemoved',subject,{key});
    if(!y[key])continue;
    const aa=x[key]?.answers||{},bb=y[key].answers||{};
-   for(const question of new Set([...Object.keys(aa),...Object.keys(bb)]))if(!eq(aa[question],bb[question])){const catalog=subject==='filosofia'?window.FILOSOFIA_DATA:window.PORTAL_DATA;const quiz=catalog?.quizzes?.find(q=>q.id===key);const entry=subject==='filosofia'?quiz?.questions?.find(q=>q.id===question):quiz?.questions?.[Number(question)];emit('answer',subject,{key,question,value:bb[question]??null,questionSnapshot:entry?clone(entry):null});}
+   for(const question of new Set([...Object.keys(aa),...Object.keys(bb)]))if(!eq(aa[question],bb[question])){const catalog=subject==='economia-a'?window.ECONOMIA_DATA:subject==='filosofia'?window.FILOSOFIA_DATA:window.PORTAL_DATA;const quiz=catalog?.quizzes?.find(q=>q.id===key);const entry=(subject==='filosofia'||subject==='economia-a')?quiz?.questions?.find(q=>q.id===question):quiz?.questions?.[Number(question)];emit('answer',subject,{key,question,value:bb[question]??null,questionSnapshot:entry?clone(entry):null});}
   }
  }
  return out;
@@ -55,3 +56,5 @@ export function createJournal(key,baseline){
   clear(){events=[];persist();}
  };
 }
+
+// economia-ajuste-20261123
